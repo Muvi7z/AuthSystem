@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #262626;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.RegistController">
+    <children>
+        <Label layoutX="345.0" layoutY="59.0" text="AuthSystems" textFill="#008084">
+            <font>
+                <Font name="Bowlby One SC Regular" size="41.0" />
+            </font>
+        </Label>
+        <Button fx:id="signUpCreateBtn" layoutX="371.0" layoutY="435.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="270.0" stylesheets="@../style.css" text="Зарегистрироваться" textFill="WHITE">
+            <font>
+                <Font name="Arial" size="12.0" />
+            </font>
+        </Button>
+        <TextField fx:id="singUpLoginFild" layoutX="337.0" layoutY="265.0" prefHeight="48.0" prefWidth="321.0" promptText="Логин" style="-fx-background-color: #262626; -fx-border-color: #fafafa; -fx-border-radius: 5;">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </TextField>
+        <Label layoutX="416.0" layoutY="167.0" text="Регистрация" textFill="WHITE">
+            <font>
+                <Font size="28.0" />
+            </font>
+        </Label>
+      <Label layoutX="340.0" layoutY="229.0" text="Введите логин" textFill="WHITE">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="340.0" layoutY="326.0" text="Введите пароль" textFill="WHITE">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <TextField fx:id="singUpPassFild1" layoutX="335.0" layoutY="365.0" prefHeight="48.0" prefWidth="321.0" promptText="Пароль" style="-fx-background-color: #262626; -fx-border-color: #fafafa; -fx-border-radius: 5;">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </TextField>
+    </children>
+</AnchorPane>

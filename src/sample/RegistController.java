@@ -4,10 +4,10 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
-public class AuthController {
+public class RegistController {
+
     @FXML
     private ResourceBundle resources;
 
@@ -15,20 +15,16 @@ public class AuthController {
     private URL location;
 
     @FXML
-    private Button signUpBtn;
+    private TextField singUpPassFild1;
 
     @FXML
-    private TextField loginFild;
+    private Button signUpCreateBtn;
 
     @FXML
-    private Button signInBtn;
+    private TextField singUpLoginFild;
 
-    @FXML
-    private PasswordField passFild;
     @FXML
     void initialize() {
-        signInBtn.setOnAction(event -> {
 
-        });
     }
 }
