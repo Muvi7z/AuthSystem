@@ -1,0 +1,14 @@
+.button{
+    -fx-background-color: #00656D;
+    -fx-font: bold 16px "Arial";
+    -fx-text-fill: #ffffff;
+}
+
+.button:pressed{
+    -fx-background-color: #262626;
+    -fx-text-fill: #00656D;
+}
+.button:released{
+    -fx-text-fill: #ffffff;
+    -fx-background-color: #00656D;
+}

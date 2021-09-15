@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.effect.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #262626;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.AuthController">
+   <children>
+      <Button fx:id="signInBtn" layoutX="365.0" layoutY="377.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="270.0" style="-fx-background-radius: 5;" stylesheets="@../style.css" text="Войти" textFill="WHITE">
+         <font>
+            <Font name="Arial" size="12.0" />
+         </font></Button>
+      <Label layoutX="345.0" layoutY="59.0" text="AuthSystems" textFill="#008084">
+         <font>
+            <Font name="Bowlby One SC Regular" size="41.0" />
+         </font>
+      </Label>
+      <Button fx:id="signUpBtn" layoutX="365.0" layoutY="445.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="270.0" stylesheets="@../style.css" text="Регистрация" textFill="WHITE">
+         <font>
+            <Font name="Arial" size="12.0" />
+         </font>
+      </Button>
+      <TextField fx:id="loginFild" layoutX="340.0" layoutY="230.0" prefHeight="48.0" prefWidth="321.0" promptText="Логин" style="-fx-background-color: #262626; -fx-border-color: #fafafa; -fx-border-radius: 5;">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </TextField>
+      <PasswordField fx:id="passFild" layoutX="340.0" layoutY="300.0" prefHeight="42.0" prefWidth="321.0" promptText="Пароль" style="-fx-background-color: #262626; -fx-border-color: #fafafa; -fx-border-radius: 5;">
+         <font>
+            <Font name="Arial" size="14.0" />
+         </font>
+      </PasswordField>
+      <Label layoutX="416.0" layoutY="167.0" text="Авторизация" textFill="WHITE">
+         <font>
+            <Font size="28.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
