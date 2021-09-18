@@ -33,7 +33,12 @@ public class AuthController {
     @FXML
     void initialize() {
         signInBtn.setOnAction(event -> {
+            String loginText = loginFild.getText().trim();
+            String passText = passFild.getText().trim();
 
+            if(!loginText.equals("") && !passText.equals("")){
+
+            }
         });
         signUpBtn.setOnAction(event -> {
             signUpBtn.getScene().getWindow().hide();
@@ -44,10 +49,15 @@ public class AuthController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+
             Parent root = loader.getRoot();
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
-            stage.showAndWait();
+            RegistController registController = loader.getController();
+
+            registController.setPrevScene(signUpBtn.getScene());
+            stage.show();
         });
     }
 }
