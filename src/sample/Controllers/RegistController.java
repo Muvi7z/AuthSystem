@@ -1,9 +1,5 @@
 package sample.Controllers;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.paint.Paint;
 import javafx.fxml.FXML;
@@ -11,19 +7,17 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import sample.DBHandler;
-import sample.Password;
-import sample.User;
+import sample.Data.Password;
+import sample.Data.User;
 
-public class RegistController {
+import java.sql.SQLException;
+
+public class RegistController implements Controller{
 
     public Scene prevScene;
 
-    @FXML
-    private ResourceBundle resources;
-
-    @FXML
-    private URL location;
 
     @FXML
     private TextField singUpPassFild1;
@@ -40,19 +34,18 @@ public class RegistController {
 
     @FXML
     void initialize() {
-        signUpCreateBtn.setOnAction(event -> {
-            signUpNewUser();
-        });
+        signUpCreateBtn.setOnAction(event -> signUpNewUser());
         backBtn.setOnAction(event -> {
             backBtn.getScene().getWindow().hide();
             Stage stage = new Stage();
             stage.setScene(prevScene);
-
+            stage.initStyle(StageStyle.UNDECORATED);
             stage.showAndWait();
 
         });
     }
-    public void error(String text) throws Exception{
+    public void error(String text){
+        errorLable.setVisible(true);
         errorLable.setText(text);
     }
     private void signUpNewUser(){
@@ -70,18 +63,22 @@ public class RegistController {
                     User user = new User(login,Password.hashingPass(pass),group);
                     try {
                         dbHandler.addUser(user);
-                        errorLable.setVisible(true);
-                        errorLable.setTextFill(Paint.valueOf("00ff73"));
+                        errorLable.setTextFill(Paint.valueOf("00ff73")); //#f51f1f
                         error("Учетная запись успешно создана!");
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                        System.out.println("Аккаунт "+login + " создан!");
+                        //TODO ЛОГИРОВАНИЕ
+                    } catch (SQLException e) {
+                        errorLable.setTextFill(Paint.valueOf("f51f1f"));
+                        error("Пользователь с таким логином  уже создан!");
+                        System.out.println(e.getMessage());
                     }
-                    System.out.println("Аккаунт "+login + " создан!");
-                    //TODO ЛОГИРОВАНИЕ
+                    catch (ClassNotFoundException e){
+                        System.out.println(e.getMessage());
+                    }
                 }
                 else {
                     try {
-                        errorLable.setVisible(true);
+                        errorLable.setTextFill(Paint.valueOf("f51f1f"));
                         error("Длинна пароля должна быть не менее 6 символов!");
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -90,7 +87,7 @@ public class RegistController {
             } else {
 
                 try {
-                    errorLable.setVisible(true);
+                    errorLable.setTextFill(Paint.valueOf("f51f1f"));
                     error("Длинна логина должна быть не менее 5 символов и не более 11 симоволов!");
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -98,8 +95,8 @@ public class RegistController {
             }
         }
         else {
-            errorLable.setVisible(true);
             try {
+                errorLable.setTextFill(Paint.valueOf("f51f1f"));
                 error("Вы не ввели логин!");
             } catch (Exception e) {
                 e.printStackTrace();
@@ -108,7 +105,8 @@ public class RegistController {
     }
 
 
-    public void setPrevScene(Scene prevScene) {
-        this.prevScene = prevScene;
+    @Override
+    public void setPrevScene(Scene scene) {
+        this.prevScene = scene;
     }
 }

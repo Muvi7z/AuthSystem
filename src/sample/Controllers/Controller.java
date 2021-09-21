@@ -1,4 +1,7 @@
 package sample.Controllers;
 
-public class Controller {
+import javafx.scene.Scene;
+
+public interface Controller {
+    public void setPrevScene(Scene scene);
 }

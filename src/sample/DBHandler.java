@@ -1,8 +1,7 @@
 package sample;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import sample.Data.User;
+
+import java.sql.*;
 
 public class DBHandler extends Configs {
     Connection dbConnection;
@@ -15,20 +14,31 @@ public class DBHandler extends Configs {
         return dbConnection;
     }
 
-    public void addUser(User user){
-        String insert = "INSERT into "+ Const.USER_TABLE + "("
-                + Const.USER_LOGIN + "," + Const.USER_PASS + "," + Const.USER_GROUP+")"
+    public void addUser(User user) throws ClassNotFoundException, SQLException{
+        String insert = "INSERT into "+ Const.USER_TABLE + "(`"
+                + Const.USER_LOGIN + "`,`" + Const.USER_PASS + "`,`" + Const.USER_GROUP+"`)"
                 + "VALUES(?,?,?)";
         System.out.println(insert);
+        PreparedStatement prSt = getDbConnection().prepareStatement(insert);
+        prSt.setString(1, user.getLogin());
+        prSt.setString(2, user.getPass());
+        prSt.setString(3, user.getGroup());
+        prSt.executeUpdate();
 
+    }
+
+    public ResultSet getUser(User user){
+        ResultSet resSet = null;
+        String select = "SELECT * from "+Const.USER_TABLE +" where "+
+                Const.USER_LOGIN + "=?";
         try {
-            PreparedStatement prSt = getDbConnection().prepareStatement(insert);
+            PreparedStatement prSt = getDbConnection().prepareStatement(select);
             prSt.setString(1, user.getLogin());
-            prSt.setString(2, user.getPass());
-            prSt.setString(3, user.getGroup());
-            prSt.executeUpdate();
+
+            resSet= prSt.executeQuery();
         } catch (SQLException | ClassNotFoundException throwables) {
             throwables.printStackTrace();
         }
+        return resSet;
     }
 }

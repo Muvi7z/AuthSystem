@@ -1,19 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.effect.*?>
-<?import java.lang.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #262626;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controllers.Controller">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controllers.MainController">
    <children>
-      <AnchorPane prefHeight="600.0" prefWidth="235.0" style="-fx-background-color: #2C2C2C;">
-         <children>
-            <Button layoutY="87.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="235.0" text="Button" />
-         </children>
-         <effect>
-            <DropShadow height="14.95" radius="9.23" width="23.97" />
-         </effect>
-      </AnchorPane>
+      <BorderPane prefHeight="600.0" prefWidth="1000.0">
+         <center>
+            <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #141414;" BorderPane.alignment="CENTER" />
+         </center>
+         <left>
+            <VBox prefHeight="600.0" prefWidth="235.0" style="-fx-background-color: #171717;" BorderPane.alignment="CENTER">
+               <effect>
+                  <DropShadow height="19.46" radius="10.3575" width="23.97" />
+               </effect>
+               <children>
+                  <Label alignment="CENTER" prefHeight="42.0" prefWidth="235.0" text="AuthSystem" textAlignment="CENTER" textFill="#f9c80e">
+                     <font>
+                        <Font name="Bowlby One SC Regular" size="24.0" />
+                     </font>
+                     <padding>
+                        <Insets bottom="15.0" top="15.0" />
+                     </padding>
+                  </Label>
+                  <Button alignment="CENTER" mnemonicParsing="false" prefHeight="38.0" prefWidth="235.0" stylesheets="@../css/styling.css" text="Просмотр" textFill="#eef0f2">
+                     <font>
+                        <Font name="Arial" size="16.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fx:id="viewImage" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true"
+                                   preserveRatio="true">
+                           <effect>
+                              <ColorAdjust brightness="1.0"/>
+                           </effect>
+                           <Image url="@../icons/view.png"/>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button alignment="CENTER" mnemonicParsing="false" prefHeight="38.0" prefWidth="235.0" stylesheets="@../css/styling.css" text="Безопасность" textFill="WHITE">
+                     <font>
+                        <Font name="Arial" size="16.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" />
+                     </graphic>
+                  </Button>
+                  <Button alignment="CENTER" mnemonicParsing="false" prefHeight="38.0" prefWidth="235.0" stylesheets="@../css/styling.css" text="Уч. записи" textFill="WHITE">
+                     <font>
+                        <Font name="Arial" size="16.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" />
+                     </graphic>
+                  </Button>
+                  <Button alignment="CENTER" mnemonicParsing="false" prefHeight="38.0" prefWidth="235.0" stylesheets="@../css/styling.css" text="Настройки" textAlignment="JUSTIFY" textFill="WHITE">
+                     <font>
+                        <Font name="Arial" size="16.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" />
+                     </graphic>
+                  </Button>
+                  <Button alignment="CENTER" mnemonicParsing="false" prefHeight="38.0" prefWidth="235.0" stylesheets="@../css/styling.css" text="Выход" textFill="WHITE">
+                     <font>
+                        <Font name="Arial" size="16.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" />
+                     </graphic>
+                  </Button>
+               </children>
+               <padding>
+                  <Insets bottom="5.0" top="5.0" />
+               </padding>
+            </VBox>
+         </left>
+      </BorderPane>
    </children>
 </AnchorPane>

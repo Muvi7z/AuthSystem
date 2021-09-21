@@ -1,4 +1,4 @@
-package sample;
+package sample.Data;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;

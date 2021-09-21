@@ -1,4 +1,4 @@
-package sample;
+package sample.Data;
 
 public class User {
 
@@ -17,6 +17,18 @@ public class User {
 
     public void setLogin(String login) {
         this.login = login;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
+    }
+
+    public void setIs_block(Boolean is_block) {
+        this.is_block = is_block;
+    }
+
+    public User(){
+
     }
     public User(String login, String pass, UserType group ){
         this.login = login;
