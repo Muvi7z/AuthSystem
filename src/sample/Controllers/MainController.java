@@ -2,16 +2,12 @@ package sample.Controllers;
 
 import javafx.scene.Scene;
 import java.net.URL;
-import java.util.Objects;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.control.Button;
 
 public class MainController implements Controller{
     public Scene prevScene;
-    @FXML
-    private ImageView viewImage;
 
     @Override
     public void setPrevScene(Scene scene) {
@@ -19,7 +15,27 @@ public class MainController implements Controller{
     }
 
     @FXML
+    private Button minimizeBtn;
+
+    @FXML
+    private Button exitBtn;
+
+    @FXML
+    private Button viewBtn;
+
+    @FXML
+    private Button securityBtn;
+
+    @FXML
+    private Button usersBtn;
+
+    @FXML
+    private Button settingsBtn;
+
+    @FXML
+    private Button logoutBtn;
+
+    @FXML
     void initialize() {
-        this.viewImage.setImage(new Image("file:../icons/view.png"));
     }
 }

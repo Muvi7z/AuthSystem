@@ -1,33 +1,33 @@
 package sample.Data;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Locale;
 import java.util.Random;
 
 public class Password {
-    String password = "";
 
     public static String hashingPass(String pass){
-        String text = "";
+        StringBuilder text = new StringBuilder();
 
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
-            byte[] data1 = pass.getBytes("UTF-8");
+            byte[] data1 = pass.getBytes(StandardCharsets.UTF_8);
             byte[] digest = messageDigest.digest(data1);
 
             for (int j = 0; j < digest.length; j++) {
                 String s = Integer.toHexString(0xff & digest[j]);
 
                 s = (s.length() == 1) ? "0" + s : s;
-                text +=s;
+                text.append(s);
             }
-            return text;
-        } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+            return text.toString();
+        } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-        return text;
+        return text.toString();
     }
 
     public static Boolean checkingPass(String pass){

@@ -1,6 +1,9 @@
 package sample.Controllers;
 
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Paint;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -17,7 +20,14 @@ import java.sql.SQLException;
 public class RegistController implements Controller{
 
     public Scene prevScene;
+    private double xOffset;
+    private double yOffset;
 
+    @FXML
+    private Button minimizeBtn;
+
+    @FXML
+    private Button exitBtn;
 
     @FXML
     private TextField singUpPassFild1;
@@ -38,6 +48,23 @@ public class RegistController implements Controller{
         backBtn.setOnAction(event -> {
             backBtn.getScene().getWindow().hide();
             Stage stage = new Stage();
+            stage.getIcons().add(new Image("https://img.icons8.com/doodle/452/iris-scan.png"));
+            prevScene.setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    xOffset = stage.getX() - event.getScreenX();
+                    yOffset = stage.getY() - event.getScreenY();
+                }
+            });
+            prevScene.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    stage.setX(event.getScreenX() + xOffset);
+                    stage.setY(event.getScreenY() + yOffset);
+                }
+            });
+            stage.setY(backBtn.getScene().getWindow().getY());
+            stage.setX(backBtn.getScene().getWindow().getX());
             stage.setScene(prevScene);
             stage.initStyle(StageStyle.UNDECORATED);
             stage.showAndWait();

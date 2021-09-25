@@ -12,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -21,34 +22,42 @@ import sample.Data.User;
 
 public class AuthController {
     int triedLeft = Settings.Tried_Pass;
+    private double xOffset;
+    private double yOffset;
     @FXML
-    private Label triedLeftLable;
+    private Label triedLeftLabel;
 
     @FXML
-    private Label errorLable;
+    private Label errorLabel;
+
+    @FXML
+    private Button minimizeBtn;
+
+    @FXML
+    private Button exitBtn;
 
     @FXML
     private Button signUpBtn;
 
     @FXML
-    private TextField loginFild;
+    private TextField loginField;
 
     @FXML
     private Button signInBtn;
 
     @FXML
-    private PasswordField passFild;
+    private PasswordField passField;
     @FXML
     void initialize() {
         signInBtn.setOnAction(event -> {
-            String login =loginFild.getText().trim();
-            String pass = passFild.getText().trim();
+            String login = loginField.getText().trim();
+            String pass = passField.getText().trim();
             if(!login.equals("")){
                 if(!pass.equals("")){
                     try {
                         loginUser(login,pass);
-                    } catch (SQLException throwables) {
-                        throwables.printStackTrace();
+                    } catch (SQLException throwable) {
+                        throwable.printStackTrace();
                     }
                 }else {
                     try {
@@ -66,9 +75,7 @@ public class AuthController {
                 }
             }
         });
-        signUpBtn.setOnAction(event -> {
-            launchNewWindow("regist.fxml", signUpBtn.getScene());
-        });
+        signUpBtn.setOnAction(event -> launchNewWindow("regist.fxml", signUpBtn.getScene(),signUpBtn.getScene().getWindow().getX(),signUpBtn.getScene().getWindow().getY()));
     }
 
     private void loginUser(String login, String pass) throws SQLException {
@@ -76,14 +83,13 @@ public class AuthController {
         User user = new User();
         user.setLogin(login);
         ResultSet result = dbHandler.getUser(user);
-        int counter = 0;
         if (result.next()){
             user.setPass(result.getString(Const.USER_PASS));
             if (Password.hashingPass(pass).equals(user.getPass())){
                 user.setIs_block(result.getBoolean(Const.USER_BLOCK));
                 if(!user.getIs_block()){
                     user.setGroup(result.getString(Const.USER_GROUP));
-                    launchNewWindow("sample.fxml",signInBtn.getScene());
+                    launchNewWindow("sample.fxml",signInBtn.getScene(),null,null );
                 }
                 else {
                     try {
@@ -113,15 +119,15 @@ public class AuthController {
         }
     }
     public void error(String text, Paint paint){
-        errorLable.setVisible(true);
-        errorLable.setTextFill(paint);
-        errorLable.setText(text);
+        errorLabel.setVisible(true);
+        errorLabel.setTextFill(paint);
+        errorLabel.setText(text);
     }
     public void setTriedLeft(String text){
-        triedLeftLable.setVisible(true);
-        triedLeftLable.setText(text);
+        triedLeftLabel.setVisible(true);
+        triedLeftLabel.setText(text);
     }
-    public void launchNewWindow(String fxml, Scene scene){
+    public void launchNewWindow(String fxml, Scene scene, Double positionX, Double positionY){
         scene.getWindow().hide();
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/sample/resources/"+fxml));
@@ -132,7 +138,22 @@ public class AuthController {
         }
         Parent root = loader.getRoot();
         Stage stage = new Stage();
-        stage.setScene(new Scene(root));
+        stage.getIcons().add(new Image("https://img.icons8.com/doodle/452/iris-scan.png"));
+        Scene newScene = new Scene(root);
+        newScene.setOnMousePressed(event -> {
+            xOffset = stage.getX() - event.getScreenX();
+            yOffset = stage.getY() - event.getScreenY();
+        });
+        newScene.setOnMouseDragged(event -> {
+            stage.setX(event.getScreenX() + xOffset);
+            stage.setY(event.getScreenY() + yOffset);
+        });
+        if(positionX != null){
+            stage.setY(positionY);
+            stage.setX(positionX);
+        }
+
+        stage.setScene(newScene);
         stage.initStyle(StageStyle.UNDECORATED);
         Controller controller = loader.getController();
 
