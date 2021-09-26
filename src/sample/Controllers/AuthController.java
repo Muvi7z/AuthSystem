@@ -36,6 +36,7 @@ public class AuthController {
     @FXML
     private Button exitBtn;
 
+
     @FXML
     private Button signUpBtn;
 
@@ -85,10 +86,12 @@ public class AuthController {
         ResultSet result = dbHandler.getUser(user);
         if (result.next()){
             user.setPass(result.getString(Const.USER_PASS));
-            if (Password.hashingPass(pass).equals(user.getPass())){
+            user.setSalt(result.getBytes(Const.USER_SALT));
+            if (Password.hashingPass(pass,user.getSalt()).equals(user.getPass())){
                 user.setIs_block(result.getBoolean(Const.USER_BLOCK));
                 if(!user.getIs_block()){
                     user.setGroup(result.getString(Const.USER_GROUP));
+                    user.setId(result.getString(Const.USERS_ID));
                     launchNewWindow("sample.fxml",signInBtn.getScene(),null,null );
                 }
                 else {

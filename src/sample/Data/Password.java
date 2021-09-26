@@ -1,30 +1,37 @@
 package sample.Data;
 
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
 import java.util.Locale;
 import java.util.Random;
 
 public class Password {
 
-    public static String hashingPass(String pass){
+    public static String hashingPass(String pass, byte[] salt){
         StringBuilder text = new StringBuilder();
+        StringBuilder saltStr = new StringBuilder();
 
         try {
-            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
-            byte[] data1 = pass.getBytes(StandardCharsets.UTF_8);
-            byte[] digest = messageDigest.digest(data1);
 
-            for (int j = 0; j < digest.length; j++) {
-                String s = Integer.toHexString(0xff & digest[j]);
+            KeySpec spec = new PBEKeySpec(pass.toCharArray(), salt, 65536, 128);
+            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+            byte[] hash = factory.generateSecret(spec).getEncoded();
+            for (byte b : hash) {
+                String s = Integer.toHexString(0xff & b);
 
                 s = (s.length() == 1) ? "0" + s : s;
                 text.append(s);
             }
             return text.toString();
-        } catch (NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             e.printStackTrace();
         }
         return text.toString();
@@ -91,8 +98,7 @@ public class Password {
 
         int old = 0;
         for (int i =0; i<n; i++){
-            int id = old;
-            id = random.nextInt(sym.length());
+            int id = random.nextInt(sym.length());
             String temp =symUpp+sym.charAt(id);
             while (checkingPass(temp)) {
                 id = random.nextInt(sym.length());
@@ -109,7 +115,7 @@ public class Password {
     public static String generatePassword(int nLog,int nPass){
         int q = nLog%6;
         int kol = nPass-2-q-1;
-        String text ="";
+        String text;
         text = generateText("qwertyuiopasdfghjklzxcvbnm",kol+2);
         text = text.substring(0,2).toUpperCase(Locale.ROOT) + text.substring(2,text.length());
         String pass =text+generateNumber(nPass-(kol+2));

@@ -1,9 +1,7 @@
 package sample.Controllers;
 
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Paint;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -15,6 +13,7 @@ import sample.DBHandler;
 import sample.Data.Password;
 import sample.Data.User;
 
+import java.security.SecureRandom;
 import java.sql.SQLException;
 
 public class RegistController implements Controller{
@@ -49,19 +48,13 @@ public class RegistController implements Controller{
             backBtn.getScene().getWindow().hide();
             Stage stage = new Stage();
             stage.getIcons().add(new Image("https://img.icons8.com/doodle/452/iris-scan.png"));
-            prevScene.setOnMousePressed(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    xOffset = stage.getX() - event.getScreenX();
-                    yOffset = stage.getY() - event.getScreenY();
-                }
+            prevScene.setOnMousePressed(event1 -> {
+                xOffset = stage.getX() - event1.getScreenX();
+                yOffset = stage.getY() - event1.getScreenY();
             });
-            prevScene.setOnMouseDragged(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    stage.setX(event.getScreenX() + xOffset);
-                    stage.setY(event.getScreenY() + yOffset);
-                }
+            prevScene.setOnMouseDragged(event12 -> {
+                stage.setX(event12.getScreenX() + xOffset);
+                stage.setY(event12.getScreenY() + yOffset);
             });
             stage.setY(backBtn.getScene().getWindow().getY());
             stage.setX(backBtn.getScene().getWindow().getX());
@@ -87,7 +80,11 @@ public class RegistController implements Controller{
                 errorLable.setVisible(false);
                 String pass = singUpPassFild1.getText().trim();
                 if(!pass.equals("") && pass.length()>5){
-                    User user = new User(login,Password.hashingPass(pass),group);
+                    SecureRandom random = new SecureRandom();
+
+                    byte[] salt = new byte[16];
+                    random.nextBytes(salt);
+                    User user = new User(login,Password.hashingPass(pass,salt),group,salt);
                     try {
                         dbHandler.addUser(user);
                         errorLable.setTextFill(Paint.valueOf("00ff73")); //#f51f1f

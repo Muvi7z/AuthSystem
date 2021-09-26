@@ -4,6 +4,8 @@
 <?import javafx.geometry.Point3D?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -15,37 +17,29 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controllers.MainController">
    <children>
-      <BorderPane prefHeight="600.0" prefWidth="1000.0">
+      <BorderPane fx:id="mainPane" nodeOrientation="LEFT_TO_RIGHT" prefHeight="600.0" prefWidth="1000.0">
          <center>
             <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #141414;" BorderPane.alignment="CENTER">
-               <Button fx:id="minimizeBtn" alignment="CENTER" layoutX="675.0" layoutY="8.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="35.0" style="-fx-background-color: #1A1A1A; -fx-background-radius: 0px;">
-                  <graphic>
-                     <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                        <image>
-                           <Image url="@../icons/minimize.png" />
-                        </image>
-                        <rotationAxis>
-                           <Point3D />
-                        </rotationAxis>
-                     </ImageView>
-                  </graphic>
-                  <padding>
-                     <Insets top="8.0" />
-                  </padding>
-               </Button>
-               <Button fx:id="exitBtn" layoutX="721.0" layoutY="8.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="36.0" style="-fx-background-color: #1A1A1A; -fx-background-radius: 0px;">
-                  <graphic>
-                     <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                        <image>
-                           <Image url="@../icons/exit.png" />
-                        </image>
-                     </ImageView>
-                  </graphic>
-               </Button>
+               <children>
+                  <Label layoutX="25.0" layoutY="52.0" text="Журнал аудита" textFill="#e1e1e1">
+                     <font>
+                        <Font name="Arial" size="26.0" />
+                     </font>
+                  </Label>
+                  <Button layoutX="230.0" layoutY="53.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="178.0" stylesheets="@../css/style.css" text="Добавить" />
+                  <TableView layoutX="7.0" layoutY="108.0" prefHeight="491.0" prefWidth="752.0" stylesheets="@../css/styling.css">
+                    <columns>
+                        <TableColumn prefWidth="61.0" text="ID" />
+                      <TableColumn prefWidth="461.0" text="Наименование события" />
+                        <TableColumn minWidth="0.0" prefWidth="49.0" text="ID User" />
+                        <TableColumn minWidth="0.0" prefWidth="180.0" text="Дата" />
+                    </columns>
+                  </TableView>
+               </children>
             </Pane>
          </center>
          <left>
-            <VBox prefHeight="600.0" prefWidth="235.0" style="-fx-background-color: #171717;" BorderPane.alignment="CENTER">
+            <VBox focusTraversable="true" prefHeight="600.0" prefWidth="235.0" style="-fx-background-color: #171717;" BorderPane.alignment="CENTER">
                <effect>
                   <DropShadow height="19.46" radius="10.3575" width="23.97" />
                </effect>
@@ -145,5 +139,29 @@
             </VBox>
          </left>
       </BorderPane>
+      <Button fx:id="exitBtn" layoutX="945.0" layoutY="8.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="36.0" style="-fx-background-color: #1A1A1A; -fx-background-radius: 0px;">
+         <graphic>
+            <ImageView fx:id="btnClose" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../icons/exit.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Button fx:id="minimizeBtn" alignment="CENTER" layoutX="910.0" layoutY="8.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="35.0" style="-fx-background-color: #1A1A1A; -fx-background-radius: 0px;">
+         <graphic>
+            <ImageView fx:id="btnMinimize" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../icons/minimize.png" />
+               </image>
+               <rotationAxis>
+                  <Point3D />
+               </rotationAxis>
+            </ImageView>
+         </graphic>
+         <padding>
+            <Insets top="8.0" />
+         </padding>
+      </Button>
    </children>
 </AnchorPane>

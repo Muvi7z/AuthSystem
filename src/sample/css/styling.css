@@ -12,3 +12,19 @@
     -fx-background-color: #7A1618;
     -fx-border-color: #7A1618;
 }
+.table-view {
+    -fx-background-color:  #141414;
+}
+.table-view .column-header,
+.table-view .column-header-background .filter{
+    -fx-cell-size: 20;
+    -fx-background-color:  #171717;
+}
+.table-view .column-header .label{
+    -fx-text-fill: #a7a7a7;
+    -fx-font-weight: bold;
+}
+.table-view .cell{
+    -fx-cell-size: 30;
+    -fx-text-fill: #000000;
+}
