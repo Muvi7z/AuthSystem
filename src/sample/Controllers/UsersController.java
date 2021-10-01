@@ -32,6 +32,8 @@ public class UsersController {
     @FXML
     private TableColumn<User, String> tcBlock;
 
+
+
     private ObservableList<User> usersList;
 
     @FXML

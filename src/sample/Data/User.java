@@ -4,7 +4,7 @@ public class User {
     private String id ="";
     private String login="";
     private String pass="";
-    private String group="";
+    private UserType group=UserType.User;
     private byte[] salt={};
     private Boolean is_block =false;
     public enum UserType {
@@ -25,7 +25,7 @@ public class User {
     }
 
     public void setGroup(String group) {
-        this.group = group;
+        this.group = UserType.valueOf(group);
     }
 
     public void setSalt(byte[] salt) {
@@ -42,13 +42,13 @@ public class User {
     public User(String login, String pass, UserType group, byte[] salt){
         this.login = login;
         this.pass = pass;
-        this.group = group.name();
+        this.group = group;
         this.salt = salt;
     }
     public User(String id, String login, String pass, UserType group,Boolean is_block){
         this.login = login;
         this.pass = pass;
-        this.group = group.name();
+        this.group = group;
         this.id = id;
         this.is_block = is_block;
     }
@@ -58,7 +58,7 @@ public class User {
     }
 
     public String getGroup() {
-        return group;
+        return group.name();
     }
 
     public String getLogin() {
