@@ -73,6 +73,7 @@ public class MainController implements Controller{
         menuNode = mainPane.getLeft();
         securityBtn.setOnAction(event -> changeItem("security.fxml"));
         usersBtn.setOnAction(event -> changeItem("users.fxml"));
+        settingsBtn.setOnAction(event -> changeItem("settings.fxml"));
 
         viewBtn.setOnAction(event -> {
             mainPane.setCenter(viewNode);

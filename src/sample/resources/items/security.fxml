@@ -5,12 +5,11 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane prefHeight="600.0" prefWidth="765.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controllers.SecurityController">
    <children>
       <Pane prefHeight="600.0" prefWidth="765.0" style="-fx-background-color: #141414;">
          <children>
-            <Label layoutX="38.0" layoutY="24.0" text="Настройки безопасности" textFill="WHITE">
+            <Label layoutX="28.0" layoutY="23.0" text="Настройки безопасности" textFill="WHITE">
                <font>
                   <Font name="Arial" size="24.0" />
                </font>
