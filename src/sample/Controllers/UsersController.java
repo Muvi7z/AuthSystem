@@ -2,19 +2,29 @@ package sample.Controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import sample.Const;
 import sample.DBHandler;
 import sample.Data.User;
+
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class UsersController {
-
+public class UsersController{
+    public Scene prevScene;
 
     @FXML
     private Button addBtn;
@@ -32,7 +42,8 @@ public class UsersController {
     @FXML
     private TableColumn<User, String> tcBlock;
 
-
+    private double xOffset;
+    private double yOffset;
 
     private ObservableList<User> usersList;
 
@@ -43,16 +54,53 @@ public class UsersController {
         tcPass.setCellValueFactory(new PropertyValueFactory<>("Pass"));
         tcGroup.setCellValueFactory(new PropertyValueFactory<>("Group"));
         tcBlock.setCellValueFactory(new PropertyValueFactory<>("is_block"));
+        tb.setEditable(true);
         tcLogin.setEditable(true);
+        tcLogin.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<User, String>>() {
+            @Override
+            public void handle(TableColumn.CellEditEvent<User, String> event) {
+                User user = ((User) event.getTableView().getItems().get(
+                        event.getTablePosition().getRow())
+                );
+                user.setLogin(event.getNewValue());
+                System.out.println(event.getNewValue());
+                System.out.println("Логин "+user.getLogin());
+            }
+        });
         UpdateData();
-
         addBtn.setOnAction(event -> {
-            User user = tb.getSelectionModel().getSelectedItem();
-            System.out.println(user.getLogin());
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/sample/resources/items/userAdd.fxml"));
+            try {
+                loader.load();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Parent root = loader.getRoot();
+            Stage stage = new Stage();
+            stage.getIcons().add(new Image("https://img.icons8.com/doodle/452/iris-scan.png"));
+            Scene newScene = new Scene(root);
+            newScene.setOnMousePressed(eventD -> {
+                xOffset = stage.getX() - eventD.getScreenX();
+                yOffset = stage.getY() - eventD.getScreenY();
+            });
+            newScene.setOnMouseDragged(eventD -> {
+                stage.setX(eventD.getScreenX() + xOffset);
+                stage.setY(eventD.getScreenY() + yOffset);
+            });
+
+            stage.setScene(newScene);
+            stage.initStyle(StageStyle.UNDECORATED);
+            Controller controller = loader.getController();
+
+            controller.setPrevScene(addBtn.getScene());
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+            UpdateData();
         });
     }
 
-    private void UpdateData() {
+    public void UpdateData() {
         DBHandler dbHandler = new DBHandler();
         ResultSet result = dbHandler.getAllUsers();
         try {
@@ -68,4 +116,5 @@ public class UsersController {
         }
 
     }
+
 }

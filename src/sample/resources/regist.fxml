@@ -27,7 +27,7 @@
                 <Font size="14.0" />
             </font>
         </TextField>
-        <Label fx:id="errorLable" contentDisplay="CENTER" layoutX="340.0" layoutY="414.0" maxWidth="350.0" prefWidth="350.0" text="Учетная запись успешно создана" textAlignment="JUSTIFY" textFill="#f51f1f" visible="false" wrapText="true">
+        <Label fx:id="errorLabel" contentDisplay="CENTER" layoutX="340.0" layoutY="414.0" maxWidth="350.0" prefWidth="350.0" text="Учетная запись успешно создана" textAlignment="JUSTIFY" textFill="#f51f1f" visible="false" wrapText="true">
             <font>
                 <Font name="Arial" size="15.0" />
             </font>

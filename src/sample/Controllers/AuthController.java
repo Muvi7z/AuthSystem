@@ -76,7 +76,9 @@ public class AuthController {
                 }
             }
         });
-        signUpBtn.setOnAction(event -> launchNewWindow("regist.fxml", signUpBtn.getScene(),signUpBtn.getScene().getWindow().getX(),signUpBtn.getScene().getWindow().getY()));
+        exitBtn.setOnAction(event -> closeWindow(exitBtn.getScene()));
+        minimizeBtn.setOnAction(event -> minimizeWindow(minimizeBtn.getScene()));
+        signUpBtn.setOnAction(event -> launchNewWindow("regist.fxml", signUpBtn.getScene(),signUpBtn.getScene().getWindow().getX(),signUpBtn.getScene().getWindow().getY(),null));
     }
 
     private void loginUser(String login, String pass) throws SQLException {
@@ -92,7 +94,7 @@ public class AuthController {
                 if(!user.getIs_block()){
                     user.setGroup(result.getString(Const.USER_GROUP));
                     user.setId(result.getString(Const.USERS_ID));
-                    launchNewWindow("sample.fxml",signInBtn.getScene(),null,null );
+                    launchNewWindow("sample.fxml",signInBtn.getScene(),null,null, user);
                 }
                 else {
                     try {
@@ -130,7 +132,7 @@ public class AuthController {
         triedLeftLabel.setVisible(true);
         triedLeftLabel.setText(text);
     }
-    public void launchNewWindow(String fxml, Scene scene, Double positionX, Double positionY){
+    public void launchNewWindow(String fxml, Scene scene, Double positionX, Double positionY, User user){
         scene.getWindow().hide();
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/sample/resources/"+fxml));
@@ -159,8 +161,16 @@ public class AuthController {
         stage.setScene(newScene);
         stage.initStyle(StageStyle.UNDECORATED);
         Controller controller = loader.getController();
-
+        controller.setUser(user);
         controller.setPrevScene(scene);
         stage.show();
+    }
+    public void minimizeWindow(Scene scene){
+        Stage stage = (Stage) scene.getWindow();
+        stage.setIconified(true);
+    }
+    public void closeWindow(Scene scene) {
+        Stage stage = (Stage) scene.getWindow();
+        stage.close();
     }
 }

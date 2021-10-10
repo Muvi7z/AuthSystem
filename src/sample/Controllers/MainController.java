@@ -10,13 +10,31 @@ import java.util.Objects;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
+import sample.Data.User;
 
 public class MainController implements Controller{
     public Scene prevScene;
+    @Override
+    public void minimizeWindow(Scene scene){
+        Stage stage = (Stage) scene.getWindow();
+        stage.setIconified(true);
+    }
+
+    @Override
+    public void setUser(User user) {
+        this.user=user;
+    }
 
     @Override
     public void setPrevScene(Scene scene) {
         this.prevScene = scene;
+    }
+
+    @Override
+    public void closeWindow(Scene scene) {
+        Stage stage = (Stage) scene.getWindow();
+        stage.close();
     }
 
     @FXML
@@ -45,34 +63,30 @@ public class MainController implements Controller{
 
     private Node viewNode = null;
     private Node menuNode = null;
+    private User user=null;
 
     @FXML
     void initialize() {
+        exitBtn.setOnAction(event -> closeWindow(exitBtn.getScene()));
+        minimizeBtn.setOnAction(event -> minimizeWindow(minimizeBtn.getScene()));
         viewNode = mainPane.getCenter();
         menuNode = mainPane.getLeft();
-        securityBtn.setOnAction(event -> {
-            try {
-                mainPane.setCenter(FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/sample/resources/items/security.fxml"))));
-                mainPane.setLeft(null);
-                mainPane.setLeft(menuNode);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+        securityBtn.setOnAction(event -> changeItem("security.fxml"));
+        usersBtn.setOnAction(event -> changeItem("users.fxml"));
+
         viewBtn.setOnAction(event -> {
             mainPane.setCenter(viewNode);
             mainPane.setLeft(null);
             mainPane.setLeft(menuNode);
         });
-        usersBtn.setOnAction(event -> {
-            try {
-                mainPane.setCenter(FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/sample/resources/items/users.fxml"))));
-                mainPane.setLeft(null);
-                mainPane.setLeft(menuNode);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        });
+    }
+    public void changeItem(String fxml){
+        try {
+            mainPane.setCenter(FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/sample/resources/items/"+fxml))));
+            mainPane.setLeft(null);
+            mainPane.setLeft(menuNode);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

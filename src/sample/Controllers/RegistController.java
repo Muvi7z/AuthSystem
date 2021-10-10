@@ -37,13 +37,15 @@ public class RegistController implements Controller{
     @FXML
     private TextField singUpLoginFild;
     @FXML
-    private Label errorLable;
+    private Label errorLabel;
     @FXML
     private Button backBtn;
 
     @FXML
     void initialize() {
-        signUpCreateBtn.setOnAction(event -> signUpNewUser());
+        exitBtn.setOnAction(event -> closeWindow(exitBtn.getScene()));
+        minimizeBtn.setOnAction(event -> minimizeWindow(minimizeBtn.getScene()));
+        signUpCreateBtn.setOnAction(event -> signUpNewUser(singUpLoginFild.getText().trim(),singUpPassFild1.getText().trim()));
         backBtn.setOnAction(event -> {
             backBtn.getScene().getWindow().hide();
             Stage stage = new Stage();
@@ -65,20 +67,18 @@ public class RegistController implements Controller{
         });
     }
     public void error(String text){
-        errorLable.setVisible(true);
-        errorLable.setText(text);
+        errorLabel.setVisible(true);
+        errorLabel.setText(text);
     }
-    private void signUpNewUser(){
+    private void signUpNewUser(String login,String pass){
         DBHandler dbHandler = new DBHandler();
         final int minLog = 5;
         final int maxLog = 11;
-        String login = singUpLoginFild.getText().trim();
         User.UserType group = User.UserType.User;
 
         if(!login.equals("")) {
             if (login.length() >= minLog && login.length() <= maxLog) {
-                errorLable.setVisible(false);
-                String pass = singUpPassFild1.getText().trim();
+                errorLabel.setVisible(false);
                 if(!pass.equals("") && pass.length()>5){
                     SecureRandom random = new SecureRandom();
 
@@ -87,12 +87,12 @@ public class RegistController implements Controller{
                     User user = new User(login,Password.hashingPass(pass,salt),group,salt);
                     try {
                         dbHandler.addUser(user);
-                        errorLable.setTextFill(Paint.valueOf("00ff73")); //#f51f1f
+                        errorLabel.setTextFill(Paint.valueOf("00ff73")); //#f51f1f
                         error("Учетная запись успешно создана!");
                         System.out.println("Аккаунт "+login + " создан!");
                         //TODO ЛОГИРОВАНИЕ
                     } catch (SQLException e) {
-                        errorLable.setTextFill(Paint.valueOf("f51f1f"));
+                        errorLabel.setTextFill(Paint.valueOf("f51f1f"));
                         error("Пользователь с таким логином  уже создан!");
                         System.out.println(e.getMessage());
                     }
@@ -102,7 +102,7 @@ public class RegistController implements Controller{
                 }
                 else {
                     try {
-                        errorLable.setTextFill(Paint.valueOf("f51f1f"));
+                        errorLabel.setTextFill(Paint.valueOf("f51f1f"));
                         error("Длинна пароля должна быть не менее 6 символов!");
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -111,7 +111,7 @@ public class RegistController implements Controller{
             } else {
 
                 try {
-                    errorLable.setTextFill(Paint.valueOf("f51f1f"));
+                    errorLabel.setTextFill(Paint.valueOf("f51f1f"));
                     error("Длинна логина должна быть не менее 5 символов и не более 11 симоволов!");
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -120,7 +120,7 @@ public class RegistController implements Controller{
         }
         else {
             try {
-                errorLable.setTextFill(Paint.valueOf("f51f1f"));
+                errorLabel.setTextFill(Paint.valueOf("f51f1f"));
                 error("Вы не ввели логин!");
             } catch (Exception e) {
                 e.printStackTrace();
@@ -128,9 +128,23 @@ public class RegistController implements Controller{
         }
     }
 
+    @Override
+    public void minimizeWindow(Scene scene){
+        Stage stage = (Stage) scene.getWindow();
+        stage.setIconified(true);
+    }
+
+    @Override
+    public void setUser(User user) {}
 
     @Override
     public void setPrevScene(Scene scene) {
         this.prevScene = scene;
+    }
+
+    @Override
+    public void closeWindow(Scene scene) {
+        Stage stage = (Stage) scene.getWindow();
+        stage.close();
     }
 }

@@ -28,3 +28,13 @@
     -fx-cell-size: 30;
     -fx-text-fill: #000000;
 }
+
+.text-field{
+    -fx-text-fill: #eef0f2;
+}
+.password-field {
+    -fx-text-fill: #eef0f2;
+}
+.choice-box {
+    -fx-text-fill: #eef0f2;
+}
