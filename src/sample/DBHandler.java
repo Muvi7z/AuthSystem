@@ -7,9 +7,17 @@ public class DBHandler extends Configs {
     Connection dbConnection;
 
     public Connection getDbConnection() throws ClassNotFoundException, SQLException{
-        String connection = "jdbc:mysql://"+ dbHost + ":" + dbPort + "/" + dbName;
+        String connection = "jdbc:mysql://"+ dbHost + ":" + dbPort + "/" + dbName; //"jdbc:oracle:thin:@"+ dbHost + ":" + dbPort+ ":" +dbSID;
         Class.forName("com.mysql.cj.jdbc.Driver");
 
+//------*ORACLE*---------------------------------------------------------------
+//        try {
+//            Class.forName("oracle.jdbc.driver.OracleDriver");
+//        } catch (ClassNotFoundException e) {
+//            System.out.println("Oracle JDBC Driver is not found");
+//            e.printStackTrace();
+//        }
+//---------------------------------------------------------------------------------------
         dbConnection = DriverManager.getConnection(connection, dbUser,dbPass);
         return dbConnection;
     }
