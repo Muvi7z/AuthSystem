@@ -2,6 +2,7 @@ package sample.Controllers;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 
 import java.io.IOException;
@@ -9,12 +10,16 @@ import java.util.Objects;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import sample.Data.User;
 
 public class MainController implements Controller{
     public Scene prevScene;
+    private double xOffset;
+    private double yOffset;
     @Override
     public void minimizeWindow(Scene scene){
         Stage stage = (Stage) scene.getWindow();
@@ -79,6 +84,23 @@ public class MainController implements Controller{
             mainPane.setCenter(viewNode);
             mainPane.setLeft(null);
             mainPane.setLeft(menuNode);
+        });
+        logoutBtn.setOnAction(event -> {
+            logoutBtn.getScene().getWindow().hide();
+            Stage stage = new Stage();
+            stage.getIcons().add(new Image("https://img.icons8.com/doodle/452/iris-scan.png"));
+            prevScene.setOnMousePressed(event1 -> {
+                xOffset = stage.getX() - event1.getScreenX();
+                yOffset = stage.getY() - event1.getScreenY();
+            });
+            prevScene.setOnMouseDragged(event12 -> {
+                stage.setX(event12.getScreenX() + xOffset);
+                stage.setY(event12.getScreenY() + yOffset);
+            });
+            stage.setScene(prevScene);
+            stage.initStyle(StageStyle.UNDECORATED);
+            stage.showAndWait();
+
         });
     }
     public void changeItem(String fxml){

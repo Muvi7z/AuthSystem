@@ -28,7 +28,11 @@ public class UsersController{
 
     @FXML
     private Button addBtn;
+    @FXML
+    private Button editBtn;
 
+    @FXML
+    private Button delBtn;
     @FXML
     private TableView<User> tb;
     @FXML
@@ -55,51 +59,51 @@ public class UsersController{
         tcGroup.setCellValueFactory(new PropertyValueFactory<>("Group"));
         tcBlock.setCellValueFactory(new PropertyValueFactory<>("is_block"));
         tb.setEditable(true);
-        tcLogin.setEditable(true);
-        tcLogin.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<User, String>>() {
-            @Override
-            public void handle(TableColumn.CellEditEvent<User, String> event) {
-                User user = ((User) event.getTableView().getItems().get(
-                        event.getTablePosition().getRow())
-                );
-                user.setLogin(event.getNewValue());
-                System.out.println(event.getNewValue());
-                System.out.println("Логин "+user.getLogin());
-            }
-        });
         UpdateData();
-        addBtn.setOnAction(event -> {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/sample/resources/items/userAdd.fxml"));
-            try {
-                loader.load();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            Parent root = loader.getRoot();
-            Stage stage = new Stage();
-            stage.getIcons().add(new Image("https://img.icons8.com/doodle/452/iris-scan.png"));
-            Scene newScene = new Scene(root);
-            newScene.setOnMousePressed(eventD -> {
-                xOffset = stage.getX() - eventD.getScreenX();
-                yOffset = stage.getY() - eventD.getScreenY();
-            });
-            newScene.setOnMouseDragged(eventD -> {
-                stage.setX(eventD.getScreenX() + xOffset);
-                stage.setY(eventD.getScreenY() + yOffset);
-            });
-
-            stage.setScene(newScene);
-            stage.initStyle(StageStyle.UNDECORATED);
-            Controller controller = loader.getController();
-
-            controller.setPrevScene(addBtn.getScene());
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.showAndWait();
-            UpdateData();
-        });
+        editBtn.setOnAction(event -> launchNewWindow("items/userEdit.fxml",editBtn.getScene(),tb.getSelectionModel().getSelectedItem()));
+        delBtn.setOnAction(event -> deleteUser(tb.getSelectionModel().getSelectedItem()));
+        addBtn.setOnAction(event -> launchNewWindow("items/userAdd.fxml",addBtn.getScene(),null));
     }
+    public void deleteUser(User user){
+        DBHandler dbHandler = new DBHandler();
+        try {
+            dbHandler.delUser(user);
+        }
+        catch (SQLException | ClassNotFoundException e){
+            System.out.println(e.getMessage());
+        }
+        UpdateData();
+    }
+    public void launchNewWindow(String fxml, Scene scene, User user){
+        FXMLLoader loader = new FXMLLoader();
 
+        loader.setLocation(getClass().getResource("/sample/resources/"+fxml));
+
+        try {
+            loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Parent root = loader.getRoot();
+        Stage stage = new Stage();
+        stage.getIcons().add(new Image("https://img.icons8.com/doodle/452/iris-scan.png"));
+        Scene newScene = new Scene(root);
+        newScene.setOnMousePressed(event -> {
+            xOffset = stage.getX() - event.getScreenX();
+            yOffset = stage.getY() - event.getScreenY();
+        });
+        newScene.setOnMouseDragged(event -> {
+            stage.setX(event.getScreenX() + xOffset);
+            stage.setY(event.getScreenY() + yOffset);
+        });
+        stage.setScene(newScene);
+        stage.initStyle(StageStyle.UNDECORATED);
+        Controller controller = loader.getController();
+        controller.setUser(user);
+        controller.setPrevScene(scene);
+        stage.showAndWait();
+        UpdateData();
+    }
     public void UpdateData() {
         DBHandler dbHandler = new DBHandler();
         ResultSet result = dbHandler.getAllUsers();
