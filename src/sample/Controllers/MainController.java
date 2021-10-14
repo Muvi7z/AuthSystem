@@ -78,7 +78,20 @@ public class MainController implements Controller{
         menuNode = mainPane.getLeft();
         securityBtn.setOnAction(event -> changeItem("security.fxml"));
         usersBtn.setOnAction(event -> changeItem("users.fxml"));
-        settingsBtn.setOnAction(event -> changeItem("settings.fxml"));
+        settingsBtn.setOnAction(event -> {
+            try {
+                FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(getClass().getResource("/sample/resources/items/settings.fxml"));
+                mainPane.setCenter(loader.load());
+                mainPane.setLeft(null);
+                mainPane.setLeft(menuNode);
+                SettingController controller = loader.getController();
+                controller.setUser(user);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        });
 
         viewBtn.setOnAction(event -> {
             mainPane.setCenter(viewNode);

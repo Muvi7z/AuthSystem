@@ -39,6 +39,11 @@
                </font>
             </Label>
             <TextField fx:id="nameField" layoutX="426.0" layoutY="106.0" prefHeight="38.0" prefWidth="287.0" style="-fx-background-color: #141414; -fx-border-color: #fafafa; -fx-border-radius: 5;" stylesheets="@../../css/styling.css" />
+            <Label fx:id="errorLabel" contentDisplay="CENTER" layoutX="34.0" layoutY="259.0" maxWidth="710.0" prefHeight="17.0" prefWidth="710.0" text="Пользователь с таким логинов не найден" textAlignment="JUSTIFY" textFill="#f51f1f" visible="false" wrapText="true">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font>
+            </Label>
             </children>
         </Pane>
     </children>

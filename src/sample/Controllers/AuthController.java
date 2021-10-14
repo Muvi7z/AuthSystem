@@ -50,6 +50,9 @@ public class AuthController {
     private PasswordField passField;
     @FXML
     void initialize() {
+        triedLeft=Settings.Tried_Pass;
+        errorLabel.setVisible(false);
+        triedLeftLabel.setVisible(false);
         signInBtn.setOnAction(event -> {
             String login = loginField.getText().trim();
             String pass = passField.getText().trim();
@@ -109,6 +112,9 @@ public class AuthController {
                     error("Введне неверный пароль!",Paint.valueOf("f51f1f"));
                     triedLeft--;
                     setTriedLeft("Осталось попыток: "+ triedLeft);
+                    if(triedLeft<=0){
+                        setTriedLeft("Аккаунт временно заблокирован!!!");
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
