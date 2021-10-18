@@ -25,7 +25,7 @@ import java.sql.SQLException;
 
 public class UsersController{
     public Scene prevScene;
-
+    private User user;
     @FXML
     private Button addBtn;
     @FXML
@@ -60,9 +60,9 @@ public class UsersController{
         tcBlock.setCellValueFactory(new PropertyValueFactory<>("is_block"));
         tb.setEditable(true);
         UpdateData();
-        editBtn.setOnAction(event -> launchNewWindow("items/userEdit.fxml",editBtn.getScene(),tb.getSelectionModel().getSelectedItem()));
+        editBtn.setOnAction(event -> launchNewWindow("items/userEdit.fxml",editBtn.getScene(),user, tb.getSelectionModel().getSelectedItem()));
         delBtn.setOnAction(event -> deleteUser(tb.getSelectionModel().getSelectedItem()));
-        addBtn.setOnAction(event -> launchNewWindow("items/userAdd.fxml",addBtn.getScene(),null));
+        addBtn.setOnAction(event -> launchNewWindow("items/userAdd.fxml",addBtn.getScene(),user,null));
     }
     public void deleteUser(User user){
         DBHandler dbHandler = new DBHandler();
@@ -74,7 +74,7 @@ public class UsersController{
         }
         UpdateData();
     }
-    public void launchNewWindow(String fxml, Scene scene, User user){
+    public void launchNewWindow(String fxml, Scene scene, User user, User selectUser){
         FXMLLoader loader = new FXMLLoader();
 
         loader.setLocation(getClass().getResource("/sample/resources/"+fxml));
@@ -99,7 +99,13 @@ public class UsersController{
         stage.setScene(newScene);
         stage.initStyle(StageStyle.UNDECORATED);
         Controller controller = loader.getController();
+        if (selectUser != null){
+           EditUserController editUserController= (EditUserController) controller;
+           editUserController.setSelectUser(selectUser);
+        }
         controller.setUser(user);
+
+
         controller.setPrevScene(scene);
         stage.showAndWait();
         UpdateData();

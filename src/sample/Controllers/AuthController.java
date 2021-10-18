@@ -4,6 +4,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,6 +19,7 @@ import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import sample.*;
+import sample.Data.Log;
 import sample.Data.Password;
 import sample.Data.User;
 
@@ -64,6 +66,9 @@ public class AuthController {
                     } catch (SQLException throwable) {
                         throwable.printStackTrace();
                     }
+                    catch (ClassNotFoundException e){
+                        System.out.println(e.getMessage());
+                    }
                 }else {
                     try {
                         error("Введите пароль",Paint.valueOf("f51f1f"));
@@ -85,7 +90,7 @@ public class AuthController {
         signUpBtn.setOnAction(event -> launchNewWindow("regist.fxml", signUpBtn.getScene(),signUpBtn.getScene().getWindow().getX(),signUpBtn.getScene().getWindow().getY(),null));
     }
 
-    private void loginUser(String login, String pass) throws SQLException {
+    private void loginUser(String login, String pass) throws SQLException, ClassNotFoundException {
         DBHandler dbHandler = new DBHandler();
         User user = new User();
         user.setLogin(login);
@@ -98,6 +103,8 @@ public class AuthController {
                 if(!user.getIs_block()){
                     user.setGroup(result.getString(Const.USER_GROUP));
                     user.setId(result.getString(Const.USERS_ID));
+                    Log log = new Log(new Date(),login, Log.Levels.INFO,"Успешный вход пользователя в систему");
+                    dbHandler.addLog(log);
                     launchNewWindow("sample.fxml",signInBtn.getScene(),null,null, user);
                 }
                 else {

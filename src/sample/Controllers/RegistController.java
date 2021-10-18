@@ -10,11 +10,13 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import sample.DBHandler;
+import sample.Data.Log;
 import sample.Data.Password;
 import sample.Data.User;
 
 import java.security.SecureRandom;
 import java.sql.SQLException;
+import java.util.Date;
 
 public class RegistController implements Controller{
 
@@ -89,8 +91,9 @@ public class RegistController implements Controller{
                         dbHandler.addUser(user);
                         errorLabel.setTextFill(Paint.valueOf("00ff73")); //#f51f1f
                         error("Учетная запись успешно создана!");
+                        Log log = new Log(new Date(),"", Log.Levels.INFO,"Создан аккаунт "+login);
+                        dbHandler.addLog(log);
                         System.out.println("Аккаунт "+login + " создан!");
-                        //TODO ЛОГИРОВАНИЕ
                     } catch (SQLException e) {
                         errorLabel.setTextFill(Paint.valueOf("f51f1f"));
                         error("Пользователь с таким логином  уже создан!");

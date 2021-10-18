@@ -39,7 +39,7 @@
             </Pane>
          </center>
          <left>
-            <VBox focusTraversable="true" prefHeight="600.0" prefWidth="235.0" style="-fx-background-color: #171717;" BorderPane.alignment="CENTER">
+            <VBox focusTraversable="true" prefHeight="600.0" prefWidth="235.0" style="-fx-background-color: #1A1A1A;" BorderPane.alignment="CENTER">
                <effect>
                   <DropShadow height="19.46" radius="10.3575" width="23.97" />
                </effect>

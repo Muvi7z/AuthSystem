@@ -1,16 +1,16 @@
 @font-face {
     font-family: 'BowlbyOneSC-Regular';
-    src: url('/BowlbyOneSC-Regular.ttf');
+    src: url('../BowlbyOneSC-Regular.ttf');
 }
 .button{
-    -fx-background-color: #171717;
+    -fx-background-color: #1A1A1A;
 }
 
 .button:pressed{
     -fx-background-color: #7A1618;
 }
 .button:hover{
-    -fx-background-color: #1A1A1A;
+    -fx-background-color: #1D1D1D;
 }
 .button:focused{
     -fx-background-color: #7A1618;

@@ -1,4 +1,5 @@
 package sample;
+import sample.Data.Log;
 import sample.Data.User;
 
 import java.sql.*;
@@ -82,5 +83,19 @@ public class DBHandler extends Configs {
             throwables.printStackTrace();
         }
         return resSet;
+    }
+
+    public void addLog(Log log) throws ClassNotFoundException, SQLException{
+        String insert = "INSERT into `"+ Const.LOG_TABLE + "`(`"
+                + Const.LOG_DATE + "`,`" + Const.LOG_UNAME + "`,`" + Const.LOG_LEVEL+ "`,`" +Const.LOG_DESC+"`)"
+                + "VALUES(?,?,?,?)";
+        System.out.println(insert);
+        PreparedStatement prSt = getDbConnection().prepareStatement(insert);
+        prSt.setString(1, log.getDate());
+        prSt.setString(2, log.getUserName());
+        prSt.setString(3, log.getLevel());
+        prSt.setString(4, log.getDescription());
+        prSt.executeUpdate();
+
     }
 }

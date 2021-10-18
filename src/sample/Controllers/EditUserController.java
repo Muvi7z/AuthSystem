@@ -8,15 +8,18 @@ import javafx.scene.control.*;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import sample.DBHandler;
+import sample.Data.Log;
 import sample.Data.Password;
 import sample.Data.User;
 
 import java.security.SecureRandom;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Date;
 
 public class EditUserController implements Controller{
     private User user=null;
+    private User selectUser=null;
     public Scene prevScene;
     @FXML
     private TextField loginEditField1;
@@ -55,13 +58,14 @@ public class EditUserController implements Controller{
             errorLabel.setVisible(false);
             if (login.length() >= minLog && login.length() <= maxLog) {
                 String pass = passEditField.getText();
-                user.setLogin(login);
+                String oldLogin = selectUser.getLogin();
+                selectUser.setLogin(login);
                 if(!pass.equals("") && pass.length()>5){
                     SecureRandom random = new SecureRandom();
                     byte[] salt = new byte[16];
                     random.nextBytes(salt);
-                    user.setPass(Password.hashingPass(pass,salt));
-                    user.setSalt(salt);
+                    selectUser.setPass(Password.hashingPass(pass,salt));
+                    selectUser.setSalt(salt);
                 }
                 else if(!pass.equals("")) {
                     try {
@@ -73,14 +77,16 @@ public class EditUserController implements Controller{
                     }
                 }
                 if(pass.equals("") || pass.length()>5){
-                    user.setGroup(choiceGroupUser.getValue().name());
-                    user.setIs_block(isBlockCheckBox.isSelected());
+                    selectUser.setGroup(choiceGroupUser.getValue().name());
+                    selectUser.setIs_block(isBlockCheckBox.isSelected());
                     try {
-                        dbHandler.editUser(user);
+                        dbHandler.editUser(selectUser);
                         errorLabel.setTextFill(Paint.valueOf("00ff73")); //#f51f1f
                         error("Учетная запись успешно изменена!");
-                        System.out.println("Аккаунт "+user.getLogin() + " изменен!");
-                        //TODO ЛОГИРОВАНИЕ
+                        System.out.println("Аккаунт "+selectUser.getLogin() + " изменен!");
+                        error("Учетная запись успешно создана!");
+                        Log log = new Log(new Date(),user.getLogin(), Log.Levels.INFO,"Администратор изменил аккаунт "+oldLogin);
+                        dbHandler.addLog(log);
                     } catch (SQLException e) {
                         errorLabel.setTextFill(Paint.valueOf("f51f1f"));
                         error("Пользователь с таким логином  уже сущ.!");
@@ -108,9 +114,14 @@ public class EditUserController implements Controller{
     @Override
     public void setUser(User user) {
         this.user=user;
+
+    }
+
+    public void setSelectUser(User selectUser) {
+        this.selectUser = selectUser;
         choiceGroupUser.setValue(User.UserType.User);
-        isBlockCheckBox.setSelected(user.getIs_block());
-        loginEditField1.setText(user.getLogin());
+        isBlockCheckBox.setSelected(selectUser.getIs_block());
+        loginEditField1.setText(selectUser.getLogin());
     }
 
     @Override
