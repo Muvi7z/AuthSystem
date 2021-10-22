@@ -2,7 +2,6 @@ package sample.Controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -12,18 +11,20 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import sample.Const;
 import sample.DBHandler;
+import sample.Data.Controller;
+import sample.Data.Log;
 import sample.Data.User;
 
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 
-public class UsersController{
+public class UsersController implements Controller{
     public Scene prevScene;
     private User user;
     @FXML
@@ -68,6 +69,8 @@ public class UsersController{
         DBHandler dbHandler = new DBHandler();
         try {
             dbHandler.delUser(user);
+            Log log = new Log(new Date(),this.user.getLogin(), Log.Levels.INFO,"Администратор удалил аккаунт "+user.getLogin());
+            dbHandler.addLog(log);
         }
         catch (SQLException | ClassNotFoundException e){
             System.out.println(e.getMessage());
@@ -127,4 +130,13 @@ public class UsersController{
 
     }
 
+    @Override
+    public void setUser(User user) {
+        this.user=user;
+    }
+
+    @Override
+    public void setPrevScene(Scene scene) {
+        prevScene=scene;
+    }
 }

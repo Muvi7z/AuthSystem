@@ -9,13 +9,16 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import sample.DBHandler;
+import sample.Data.Controller;
+import sample.Data.Log;
 import sample.Data.Password;
 import sample.Data.User;
 
 import java.security.SecureRandom;
 import java.sql.SQLException;
+import java.util.Date;
 
-public class SettingController{
+public class SettingController implements Controller {
     private User user=null;
     public Scene prevScene;
     @FXML
@@ -45,6 +48,7 @@ public class SettingController{
             if (login.length() >= minLog && login.length() <= maxLog) {
                 String pass = passField.getText();
                 String confPass = confPassField.getText();
+                String oldLogin = user.getLogin();
                 user.setLogin(login);
                 if(!pass.equals("") && pass.length()>5 && pass.equals(confPass)){
                     SecureRandom random = new SecureRandom();
@@ -77,7 +81,8 @@ public class SettingController{
                         errorLabel.setTextFill(Paint.valueOf("00ff73")); //#f51f1f
                         error("Учетная запись успешно изменена!");
                         System.out.println("Аккаунт "+user.getLogin() + " изменен!");
-                        //TODO ЛОГИРОВАНИЕ
+                        Log log = new Log(new Date(),user.getLogin(), Log.Levels.INFO,"Пользователь "+oldLogin + "изменил свой аккаунт");
+                        dbHandler.addLog(log);
                     } catch (SQLException e) {
                         errorLabel.setTextFill(Paint.valueOf("f51f1f"));
                         error("Пользователь с таким логином  уже сущ.!");
@@ -101,11 +106,16 @@ public class SettingController{
         errorLabel.setVisible(true);
         errorLabel.setText(text);
     }
-
+    @Override
     public void setUser(User user) {
         this.user=user;
         nameField.setText(user.getLogin());
 
+    }
+
+    @Override
+    public void setPrevScene(Scene scene) {
+        this.prevScene = scene;
     }
 
 

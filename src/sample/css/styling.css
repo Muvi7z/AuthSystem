@@ -32,7 +32,9 @@
     -fx-cell-size: 30;
     -fx-text-fill: #000000;
 }
-
+.text-field .spinner{
+    -fx-text-fill: #141414;
+}
 .text-field{
     -fx-text-fill: #eef0f2;
 }

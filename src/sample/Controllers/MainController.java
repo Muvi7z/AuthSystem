@@ -2,11 +2,11 @@ package sample.Controllers;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 
 import java.io.IOException;
-import java.util.Objects;
+import java.sql.SQLException;
+import java.util.Date;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -14,18 +14,16 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import sample.DBHandler;
+import sample.Data.Controller;
+import sample.Data.Log;
 import sample.Data.User;
+import sample.Data.Window;
 
-public class MainController implements Controller{
+public class MainController extends Window implements Controller {
     public Scene prevScene;
     private double xOffset;
     private double yOffset;
-    @Override
-    public void minimizeWindow(Scene scene){
-        Stage stage = (Stage) scene.getWindow();
-        stage.setIconified(true);
-    }
-
     @Override
     public void setUser(User user) {
         this.user=user;
@@ -36,11 +34,6 @@ public class MainController implements Controller{
         this.prevScene = scene;
     }
 
-    @Override
-    public void closeWindow(Scene scene) {
-        Stage stage = (Stage) scene.getWindow();
-        stage.close();
-    }
 
     @FXML
     private Button minimizeBtn;
@@ -72,26 +65,13 @@ public class MainController implements Controller{
 
     @FXML
     void initialize() {
-        exitBtn.setOnAction(event -> closeWindow(exitBtn.getScene()));
-        minimizeBtn.setOnAction(event -> minimizeWindow(minimizeBtn.getScene()));
+        exitBtn.setOnAction(event -> close(exitBtn.getScene()));
+        minimizeBtn.setOnAction(event -> minimize(minimizeBtn.getScene()));
         viewNode = mainPane.getCenter();
         menuNode = mainPane.getLeft();
         securityBtn.setOnAction(event -> changeItem("security.fxml"));
         usersBtn.setOnAction(event -> changeItem("users.fxml"));
-        settingsBtn.setOnAction(event -> {
-            try {
-                FXMLLoader loader = new FXMLLoader();
-                loader.setLocation(getClass().getResource("/sample/resources/items/settings.fxml"));
-                mainPane.setCenter(loader.load());
-                mainPane.setLeft(null);
-                mainPane.setLeft(menuNode);
-                SettingController controller = loader.getController();
-                controller.setUser(user);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        });
+        settingsBtn.setOnAction(event -> changeItem("settings.fxml"));
 
         viewBtn.setOnAction(event -> {
             mainPane.setCenter(viewNode);
@@ -110,6 +90,13 @@ public class MainController implements Controller{
                 stage.setX(event12.getScreenX() + xOffset);
                 stage.setY(event12.getScreenY() + yOffset);
             });
+            DBHandler dbHandler = new DBHandler();
+            Log log = new Log(new Date(),this.user.getLogin(), Log.Levels.INFO,"Пользователь вышел из аккаунта");
+            try {
+                dbHandler.addLog(log);
+            } catch (ClassNotFoundException | SQLException e) {
+                e.printStackTrace();
+            }
             stage.setScene(prevScene);
             stage.initStyle(StageStyle.UNDECORATED);
             stage.showAndWait();
@@ -118,7 +105,12 @@ public class MainController implements Controller{
     }
     public void changeItem(String fxml){
         try {
-            mainPane.setCenter(FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/sample/resources/items/"+fxml))));
+            FXMLLoader loader = new FXMLLoader();
+
+            loader.setLocation(getClass().getResource("/sample/resources/items/"+fxml));
+            mainPane.setCenter(loader.load());
+            Controller controller = loader.getController();
+            controller.setUser(user);
             mainPane.setLeft(null);
             mainPane.setLeft(menuNode);
         } catch (IOException e) {

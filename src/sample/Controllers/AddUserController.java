@@ -11,16 +11,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import sample.DBHandler;
-import sample.Data.Log;
-import sample.Data.Password;
-import sample.Data.User;
+import sample.Data.*;
 
 import java.security.SecureRandom;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Date;
 
-public class AddUserController implements Controller{
+public class AddUserController extends Window implements Controller  {
     public Scene prevScene;
 
     @FXML
@@ -50,7 +48,7 @@ public class AddUserController implements Controller{
         addUserBtn.setOnAction(event -> {
             createNewUser(loginCreateField1.getText(),choiceGroupUser.getValue());
         });
-        exitBtn.setOnAction(event -> closeWindow(exitBtn.getScene()));
+        exitBtn.setOnAction(event -> close(exitBtn.getScene()));
     }
     public void createNewUser(String login, User.UserType type){
         DBHandler dbHandler = new DBHandler();
@@ -69,7 +67,7 @@ public class AddUserController implements Controller{
                     dbHandler.addUser(user);
                     errorLabel.setTextFill(Paint.valueOf("00ff73")); //#f51f1f
                     error("Учетная запись успешно создана!");
-                    Log log = new Log(new Date(),user.getLogin(), Log.Levels.INFO,"Администратор создал аккаунт "+login);
+                    Log log = new Log(new Date(),this.user.getLogin(), Log.Levels.INFO,"Администратор создал аккаунт "+login);
                     dbHandler.addLog(log);
                     passCreateField.setText(pass);
                     System.out.println("Аккаунт "+login + " создан!");
@@ -116,11 +114,5 @@ public class AddUserController implements Controller{
     public void setPrevScene(Scene scene) {
         prevScene=scene;
     }
-    @Override
-    public void minimizeWindow(Scene scene){}
-    @Override
-    public void closeWindow(Scene scene) {
-        Stage stage = (Stage) scene.getWindow();
-        stage.close();
-    }
+
 }

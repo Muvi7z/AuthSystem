@@ -10,15 +10,13 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import sample.DBHandler;
-import sample.Data.Log;
-import sample.Data.Password;
-import sample.Data.User;
+import sample.Data.*;
 
 import java.security.SecureRandom;
 import java.sql.SQLException;
 import java.util.Date;
 
-public class RegistController implements Controller{
+public class RegistController extends Window implements Controller {
 
     public Scene prevScene;
     private double xOffset;
@@ -45,8 +43,8 @@ public class RegistController implements Controller{
 
     @FXML
     void initialize() {
-        exitBtn.setOnAction(event -> closeWindow(exitBtn.getScene()));
-        minimizeBtn.setOnAction(event -> minimizeWindow(minimizeBtn.getScene()));
+        exitBtn.setOnAction(event -> close(exitBtn.getScene()));
+        minimizeBtn.setOnAction(event -> minimize(minimizeBtn.getScene()));
         signUpCreateBtn.setOnAction(event -> signUpNewUser(singUpLoginFild.getText().trim(),singUpPassFild1.getText().trim()));
         backBtn.setOnAction(event -> {
             backBtn.getScene().getWindow().hide();
@@ -132,12 +130,6 @@ public class RegistController implements Controller{
     }
 
     @Override
-    public void minimizeWindow(Scene scene){
-        Stage stage = (Stage) scene.getWindow();
-        stage.setIconified(true);
-    }
-
-    @Override
     public void setUser(User user) {}
 
     @Override
@@ -145,9 +137,4 @@ public class RegistController implements Controller{
         this.prevScene = scene;
     }
 
-    @Override
-    public void closeWindow(Scene scene) {
-        Stage stage = (Stage) scene.getWindow();
-        stage.close();
-    }
 }

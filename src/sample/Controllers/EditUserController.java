@@ -8,16 +8,14 @@ import javafx.scene.control.*;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import sample.DBHandler;
-import sample.Data.Log;
-import sample.Data.Password;
-import sample.Data.User;
+import sample.Data.*;
 
 import java.security.SecureRandom;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Date;
 
-public class EditUserController implements Controller{
+public class EditUserController extends Window implements Controller {
     private User user=null;
     private User selectUser=null;
     public Scene prevScene;
@@ -46,7 +44,7 @@ public class EditUserController implements Controller{
     void initialize() {
         ObservableList<User.UserType> usersT = FXCollections.observableList(Arrays.stream(User.UserType.values()).toList());
         choiceGroupUser.setItems(usersT);
-        exitBtn.setOnAction(event -> closeWindow(exitBtn.getScene()));
+        exitBtn.setOnAction(event -> close(exitBtn.getScene()));
         editUserBtn.setOnAction(event -> editUser());
     }
     public void editUser(){
@@ -128,11 +126,5 @@ public class EditUserController implements Controller{
     public void setPrevScene(Scene scene) {
         prevScene=scene;
     }
-    @Override
-    public void minimizeWindow(Scene scene){}
-    @Override
-    public void closeWindow(Scene scene) {
-        Stage stage = (Stage) scene.getWindow();
-        stage.close();
-    }
+
 }

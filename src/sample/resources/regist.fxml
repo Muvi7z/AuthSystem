@@ -17,7 +17,7 @@
                 <Font size="18.0" />
             </font>
         </Label>
-        <TextField fx:id="singUpLoginFild" layoutX="340.0" layoutY="262.0" prefHeight="48.0" prefWidth="321.0" promptText="Логин" style="-fx-background-color: #171717; -fx-border-color: #fafafa; -fx-border-radius: 5;">
+        <TextField fx:id="singUpLoginFild" layoutX="340.0" layoutY="262.0" prefHeight="48.0" prefWidth="321.0" promptText="Логин" style="-fx-background-color: #171717; -fx-border-color: #fafafa; -fx-border-radius: 5;" stylesheets="@../css/styling.css">
             <font>
                 <Font size="14.0" />
             </font>

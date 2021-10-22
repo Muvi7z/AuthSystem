@@ -1,6 +1,5 @@
 package sample.Controllers;
 
-import java.awt.*;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,11 +18,9 @@ import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import sample.*;
-import sample.Data.Log;
-import sample.Data.Password;
-import sample.Data.User;
+import sample.Data.*;
 
-public class AuthController {
+public class AuthController extends Window {
     int triedLeft = Settings.Tried_Pass;
     private double xOffset;
     private double yOffset;
@@ -85,8 +82,8 @@ public class AuthController {
                 }
             }
         });
-        exitBtn.setOnAction(event -> closeWindow(exitBtn.getScene()));
-        minimizeBtn.setOnAction(event -> minimizeWindow(minimizeBtn.getScene()));
+        exitBtn.setOnAction(event -> close(exitBtn.getScene()));
+        minimizeBtn.setOnAction(event -> close(minimizeBtn.getScene()));
         signUpBtn.setOnAction(event -> launchNewWindow("regist.fxml", signUpBtn.getScene(),signUpBtn.getScene().getWindow().getX(),signUpBtn.getScene().getWindow().getY(),null));
     }
 
@@ -179,12 +176,5 @@ public class AuthController {
         controller.setPrevScene(scene);
         stage.show();
     }
-    public void minimizeWindow(Scene scene){
-        Stage stage = (Stage) scene.getWindow();
-        stage.setIconified(true);
-    }
-    public void closeWindow(Scene scene) {
-        Stage stage = (Stage) scene.getWindow();
-        stage.close();
-    }
+
 }
