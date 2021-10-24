@@ -22,7 +22,7 @@
                 <Font size="14.0" />
             </font>
         </TextField>
-        <TextField fx:id="singUpPassFild1" layoutX="340.0" layoutY="356.0" prefHeight="48.0" prefWidth="321.0" promptText="Пароль" style="-fx-background-color: #171717; -fx-border-color: #fafafa; -fx-border-radius: 5;">
+        <TextField fx:id="singUpPassFild1" layoutX="340.0" layoutY="356.0" prefHeight="48.0" prefWidth="321.0" promptText="Пароль" style="-fx-background-color: #171717; -fx-border-color: #fafafa; -fx-border-radius: 5;" stylesheets="@../css/styling.css">
             <font>
                 <Font size="14.0" />
             </font>

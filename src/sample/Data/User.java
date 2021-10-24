@@ -1,12 +1,15 @@
 package sample.Data;
 
+import java.util.Date;
+
 public class User {
     private String id ="";
     private String login="";
     private String pass="";
     private UserType group=UserType.User;
     private byte[] salt={};
-    private Boolean is_block =false;
+    private Boolean isBlock =false;
+    private Date dateBlock = new Date();
     public enum UserType {
         Admin,
         User
@@ -32,8 +35,12 @@ public class User {
         this.salt = salt;
     }
 
-    public void setIs_block(Boolean is_block) {
-        this.is_block = is_block;
+    public void setIsBlock(Boolean isBlock) {
+        this.isBlock = isBlock;
+    }
+
+    public void setDateBlock(Date dateBlock) {
+        this.dateBlock = dateBlock;
     }
 
     public User(){
@@ -45,16 +52,16 @@ public class User {
         this.group = group;
         this.salt = salt;
     }
-    public User(String id, String login, String pass, UserType group,Boolean is_block){
+    public User(String id, String login, String pass, UserType group,Boolean isBlock){
         this.login = login;
         this.pass = pass;
         this.group = group;
         this.id = id;
-        this.is_block = is_block;
+        this.isBlock = isBlock;
     }
 
-    public Boolean getIs_block() {
-        return is_block;
+    public Boolean getIsBlock() {
+        return isBlock;
     }
 
     public String getGroup() {
@@ -75,5 +82,9 @@ public class User {
 
     public String getId() {
         return id;
+    }
+
+    public Date getDateBlock() {
+        return dateBlock;
     }
 }

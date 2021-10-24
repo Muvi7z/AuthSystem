@@ -6,7 +6,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.paint.Paint;
-import javafx.stage.Stage;
 import sample.DBHandler;
 import sample.Data.*;
 
@@ -76,7 +75,7 @@ public class EditUserController extends Window implements Controller {
                 }
                 if(pass.equals("") || pass.length()>5){
                     selectUser.setGroup(choiceGroupUser.getValue().name());
-                    selectUser.setIs_block(isBlockCheckBox.isSelected());
+                    selectUser.setIsBlock(isBlockCheckBox.isSelected());
                     try {
                         dbHandler.editUser(selectUser);
                         errorLabel.setTextFill(Paint.valueOf("00ff73")); //#f51f1f
@@ -118,7 +117,7 @@ public class EditUserController extends Window implements Controller {
     public void setSelectUser(User selectUser) {
         this.selectUser = selectUser;
         choiceGroupUser.setValue(User.UserType.User);
-        isBlockCheckBox.setSelected(selectUser.getIs_block());
+        isBlockCheckBox.setSelected(selectUser.getIsBlock());
         loginEditField1.setText(selectUser.getLogin());
     }
 

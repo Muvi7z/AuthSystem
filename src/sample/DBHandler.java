@@ -45,7 +45,7 @@ public class DBHandler extends Configs {
         prSt.setString(1, user.getLogin());
         prSt.setString(2, user.getPass());
         prSt.setString(3, user.getGroup());
-        prSt.setBoolean(4, user.getIs_block());
+        prSt.setBoolean(4, user.getIsBlock());
         prSt.setBytes(5, user.getSalt());
         prSt.setString(6, user.getId());
         prSt.executeUpdate();

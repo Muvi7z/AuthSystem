@@ -88,6 +88,7 @@ public class AuthController extends Window {
     }
 
     private void loginUser(String login, String pass) throws SQLException, ClassNotFoundException {
+        triedLeft=Settings.Tried_Pass;
         DBHandler dbHandler = new DBHandler();
         User user = new User();
         user.setLogin(login);
@@ -96,18 +97,26 @@ public class AuthController extends Window {
             user.setPass(result.getString(Const.USER_PASS));
             user.setSalt(result.getBytes(Const.USER_SALT));
             if (Password.hashingPass(pass,user.getSalt()).equals(user.getPass())){
-                user.setIs_block(result.getBoolean(Const.USER_BLOCK));
-                if(!user.getIs_block()){
-                    user.setGroup(result.getString(Const.USER_GROUP));
-                    user.setId(result.getString(Const.USERS_ID));
+                user.setIsBlock(result.getBoolean(Const.USER_BLOCK));
+                user.setDateBlock(result.getTimestamp(Const.USER_TIMEBLOCK));
+                user.setGroup(result.getString(Const.USER_GROUP));
+                user.setId(result.getString(Const.USERS_ID));
+                if (user.getIsBlock() && (new Date()).after(user.getDateBlock())){
+                    user.setIsBlock(false);
+                    dbHandler.editUser(user);
+                }
+                if(!user.getIsBlock()){
                     Log log = new Log(new Date(),login, Log.Levels.INFO,"Успешный вход пользователя в систему");
                     dbHandler.addLog(log);
+                    error("Успешный вход",Paint.valueOf("f51f1f"));
+                    triedLeftLabel.setVisible(false);
                     launchNewWindow("sample.fxml",signInBtn.getScene(),null,null, user);
+
                 }
                 else {
                     try {
                         error("Пользователь с таким логином заблокирован!",Paint.valueOf("f51f1f"));
-                        setTriedLeft("Разблокировка через:"+ "1 век");
+                        setTriedLeft("Заблокирован до: "+ user.getDateBlock());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -119,6 +128,9 @@ public class AuthController extends Window {
                     setTriedLeft("Осталось попыток: "+ triedLeft);
                     if(triedLeft<=0){
                         setTriedLeft("Аккаунт временно заблокирован!!!");
+                        Log log = new Log(new Date(),null, Log.Levels.INFO,"Несанкционированый доступ к пользователю "+ login);
+                        dbHandler.addLog(log);
+                        ///TODO блокировка
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
