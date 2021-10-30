@@ -1,5 +1,6 @@
 package sample.Data;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class User {
@@ -52,12 +53,13 @@ public class User {
         this.group = group;
         this.salt = salt;
     }
-    public User(String id, String login, String pass, UserType group,Boolean isBlock){
+    public User(String id, String login, String pass, UserType group,Boolean isBlock, Date dateBlock){
         this.login = login;
         this.pass = pass;
         this.group = group;
         this.id = id;
         this.isBlock = isBlock;
+        this.dateBlock = dateBlock;
     }
 
     public Boolean getIsBlock() {
@@ -84,6 +86,10 @@ public class User {
         return id;
     }
 
+    public String getDateBlockFormat() {
+        SimpleDateFormat formatForDateNow = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+        return formatForDateNow.format(dateBlock);
+    }
     public Date getDateBlock() {
         return dateBlock;
     }

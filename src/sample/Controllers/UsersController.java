@@ -58,7 +58,8 @@ public class UsersController implements Controller{
         tcLogin.setCellValueFactory(new PropertyValueFactory<>("Login"));
         tcPass.setCellValueFactory(new PropertyValueFactory<>("Pass"));
         tcGroup.setCellValueFactory(new PropertyValueFactory<>("Group"));
-        tcBlock.setCellValueFactory(new PropertyValueFactory<>("is_block"));
+        tcBlock.setCellValueFactory(new PropertyValueFactory<>("is_blocked"));
+       // tcBlock.setCellValueFactory(new PropertyValueFactory<>("time_block"));
         tb.setEditable(true);
         UpdateData();
         editBtn.setOnAction(event -> launchNewWindow("items/userEdit.fxml",editBtn.getScene(),user, tb.getSelectionModel().getSelectedItem()));
@@ -119,7 +120,7 @@ public class UsersController implements Controller{
         try {
             usersList = FXCollections.observableArrayList();
             while (result.next()){
-                User user = new User(result.getString(Const.USERS_ID), result.getString(Const.USER_LOGIN),result.getString(Const.USER_PASS), User.UserType.valueOf(result.getString(Const.USER_GROUP)),result.getBoolean(Const.USER_BLOCK));
+                User user = new User(result.getString(Const.USERS_ID), result.getString(Const.USER_LOGIN),result.getString(Const.USER_PASS), User.UserType.valueOf(result.getString(Const.USER_GROUP)),result.getBoolean(Const.USER_BLOCK),result.getTimestamp(Const.USER_TIMEBLOCK));
                 usersList.add(user);
             }
             tb.setItems(usersList);

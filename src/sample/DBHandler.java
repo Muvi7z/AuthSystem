@@ -49,7 +49,16 @@ public class DBHandler extends Configs {
         prSt.setBytes(5, user.getSalt());
         prSt.setString(6, user.getId());
         prSt.executeUpdate();
-
+    }
+    public void setBlockUser(User user, Boolean block, String date) throws ClassNotFoundException, SQLException{
+        String insert = "UPDATE `"+ Const.USER_TABLE + "` SET `" + Const.USER_BLOCK+ "` = ?,`"+Const.USER_TIMEBLOCK+"` = ?"
+                +" WHERE(`"+Const.USERS_ID+"` = ?)";
+        System.out.println(insert);
+        PreparedStatement prSt = getDbConnection().prepareStatement(insert);
+        prSt.setBoolean(1, block);
+        prSt.setString(2, date);
+        prSt.setString(3, user.getId());
+        prSt.executeUpdate();
     }
     public void delUser(User user) throws ClassNotFoundException, SQLException{
         String insert = "DELETE FROM `"+Const.USER_TABLE+"` WHERE(`"+Const.USERS_ID+"` = ?)";

@@ -3,6 +3,7 @@ package sample.Controllers;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javafx.fxml.FXML;
@@ -21,7 +22,7 @@ import sample.*;
 import sample.Data.*;
 
 public class AuthController extends Window {
-    int triedLeft = Settings.Tried_Pass;
+    int tried = 0;
     private double xOffset;
     private double yOffset;
     @FXML
@@ -50,7 +51,7 @@ public class AuthController extends Window {
     private PasswordField passField;
     @FXML
     void initialize() {
-        triedLeft=Settings.Tried_Pass;
+        tried=0;
         errorLabel.setVisible(false);
         triedLeftLabel.setVisible(false);
         signInBtn.setOnAction(event -> {
@@ -88,7 +89,6 @@ public class AuthController extends Window {
     }
 
     private void loginUser(String login, String pass) throws SQLException, ClassNotFoundException {
-        triedLeft=Settings.Tried_Pass;
         DBHandler dbHandler = new DBHandler();
         User user = new User();
         user.setLogin(login);
@@ -96,14 +96,14 @@ public class AuthController extends Window {
         if (result.next()){
             user.setPass(result.getString(Const.USER_PASS));
             user.setSalt(result.getBytes(Const.USER_SALT));
+            user.setId(result.getString(Const.USERS_ID));
             if (Password.hashingPass(pass,user.getSalt()).equals(user.getPass())){
                 user.setIsBlock(result.getBoolean(Const.USER_BLOCK));
                 user.setDateBlock(result.getTimestamp(Const.USER_TIMEBLOCK));
                 user.setGroup(result.getString(Const.USER_GROUP));
-                user.setId(result.getString(Const.USERS_ID));
                 if (user.getIsBlock() && (new Date()).after(user.getDateBlock())){
                     user.setIsBlock(false);
-                    dbHandler.editUser(user);
+                    dbHandler.setBlockUser(user,false,null);
                 }
                 if(!user.getIsBlock()){
                     Log log = new Log(new Date(),login, Log.Levels.INFO,"Успешный вход пользователя в систему");
@@ -124,12 +124,17 @@ public class AuthController extends Window {
             }else {
                 try {
                     error("Введне неверный пароль!",Paint.valueOf("f51f1f"));
-                    triedLeft--;
-                    setTriedLeft("Осталось попыток: "+ triedLeft);
-                    if(triedLeft<=0){
-                        setTriedLeft("Аккаунт временно заблокирован!!!");
+                    tried++;
+                    setTriedLeft("Осталось попыток: "+ (Settings.Tried_Pass-tried));
+                    if((Settings.Tried_Pass-tried)<=0){
                         Log log = new Log(new Date(),null, Log.Levels.INFO,"Несанкционированый доступ к пользователю "+ login);
                         dbHandler.addLog(log);
+
+                        Date date = new Date(new Date().getTime()+(Settings.TimeBlock*60000L));
+                        SimpleDateFormat formatForDateNow = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+                        setTriedLeft("Аккаунт заблокирован до: "+date);
+                        dbHandler.setBlockUser(user,true,formatForDateNow.format(date));
+                        tried=0;
                         ///TODO блокировка
                     }
                 } catch (Exception e) {

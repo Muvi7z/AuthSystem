@@ -110,6 +110,7 @@ public class MainController extends Window implements Controller {
             loader.setLocation(getClass().getResource("/sample/resources/items/"+fxml));
             mainPane.setCenter(loader.load());
             Controller controller = loader.getController();
+            controller.setPrevScene(prevScene);
             controller.setUser(user);
             mainPane.setLeft(null);
             mainPane.setLeft(menuNode);
