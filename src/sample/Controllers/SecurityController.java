@@ -3,8 +3,14 @@ package sample.Controllers;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import sample.DBHandler;
 import sample.Data.Controller;
+import sample.Data.Log;
 import sample.Data.User;
+import sample.Settings;
+
+import java.sql.SQLException;
+import java.util.Date;
 
 public class SecurityController implements Controller {
     private User user= null;
@@ -69,8 +75,9 @@ public class SecurityController implements Controller {
             }
 
         };
-        factory.setValue(1L);
-        timeOutFactory.setValue(1L);
+        triedField1.setText(Integer.toString( Settings.Tried_Pass));
+        factory.setValue(Settings.TimeBlock);
+        timeOutFactory.setValue(Settings.TimeOut);
         timeBlockSpinner.setValueFactory(factory);
         timeOutSpinner.setValueFactory(timeOutFactory);
         timeBlockSpinner.getEditor().setOnAction(actionEvent -> {
@@ -111,17 +118,43 @@ public class SecurityController implements Controller {
             timeBlockLabel.setVisible(true);
             timeBlockLabel.setText(text);
         });
-        timeBlockSpinner.valueProperty().addListener((observableValue, old, newV) -> {
+        timeOutSpinner.valueProperty().addListener((observableValue, old, newV) -> {
             String text = "";
             text+="Минут: "+newV;
             timeOutLabel.setVisible(true);
             timeOutLabel.setText(text);
         });
-        saveBtn.setOnAction(event -> editSecurity(triedField1.getText(), timeBlockSpinner.getValue(),timeOutSpinner.getValue()));
+        saveBtn.setOnAction(event -> {
+            try{
+                editSecurity(Integer.parseInt(triedField1.getText()), timeBlockSpinner.getValue(),timeOutSpinner.getValue());
+            }
+            catch (Exception e){
+                error("Введены неверные данные!");
+            }
+        });
     }
-    public void editSecurity(String kol, long timeBlock, long timeOut){
-        System.out.println(timeBlock);
-        System.out.println(timeOut);
-        System.out.println(kol);
+    public void editSecurity(int kol, long timeBlock, long timeOut){
+        DBHandler dbHandler = new DBHandler();
+        if (kol>10){
+            error("Количество попыток должно быть не более 10");
+        }
+        else {
+            try {
+                dbHandler.changeSettings(kol, timeBlock, timeOut);
+                Settings.Tried_Pass=kol;
+                Settings.TimeBlock=timeBlock;
+                Settings.TimeOut=timeOut;
+                Log log = new Log(new Date(),user.getLogin(), Log.Levels.INFO,"Администратор изменил настройки безопасности");
+                dbHandler.addLog(log);
+                errorLabel.setVisible(false);
+            } catch (ClassNotFoundException | SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+    public void error(String text){
+        errorLabel.setVisible(true);
+        errorLabel.setText(text);
     }
 }

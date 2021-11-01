@@ -8,7 +8,7 @@ public class User {
     private String login="";
     private String pass="";
     private UserType group=UserType.User;
-    private byte[] salt={};
+    private byte[] salt=null;
     private Boolean isBlock =false;
     private Date dateBlock = new Date();
     public enum UserType {

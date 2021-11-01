@@ -38,16 +38,24 @@ public class DBHandler extends Configs {
     }
     public void editUser(User user) throws ClassNotFoundException, SQLException{
         String insert = "UPDATE `"+ Const.USER_TABLE + "` SET `" +Const.USER_LOGIN
-                + "` = ?,`" + Const.USER_PASS + "`= ?,`" + Const.USER_GROUP+ "` = ?,`" + Const.USER_BLOCK+ "` = ?,`"+Const.USER_SALT+"` = ?"
-                +" WHERE(`"+Const.USERS_ID+"` = ?)";
+                + "` = ?,`"+Const.USER_GROUP+ "` = ?,`" + Const.USER_BLOCK+ "` = ?";
         System.out.println(insert);
+        if(user.getSalt() != null){
+            insert += ",`"+Const.USER_SALT+"` = ?,`"+Const.USER_PASS + "`= ?"+" WHERE(`"+Const.USERS_ID+"` = ?)";
+        }
+        else {
+            insert += " WHERE(`"+Const.USERS_ID+"` = ?)";
+        }
         PreparedStatement prSt = getDbConnection().prepareStatement(insert);
         prSt.setString(1, user.getLogin());
-        prSt.setString(2, user.getPass());
-        prSt.setString(3, user.getGroup());
-        prSt.setBoolean(4, user.getIsBlock());
-        prSt.setBytes(5, user.getSalt());
-        prSt.setString(6, user.getId());
+        prSt.setString(2, user.getGroup());
+        prSt.setBoolean(3, user.getIsBlock());
+        if(user.getSalt() != null){
+            prSt.setBytes(4, user.getSalt());
+            prSt.setString(5, user.getPass());
+            prSt.setString(6, user.getId());
+        }
+        else prSt.setString(4, user.getId());
         prSt.executeUpdate();
     }
     public void setBlockUser(User user, Boolean block, String date) throws ClassNotFoundException, SQLException{
@@ -93,7 +101,28 @@ public class DBHandler extends Configs {
         }
         return resSet;
     }
-
+    public void changeSettings(int TriedPass, long TimeBlock, long TimeOut) throws ClassNotFoundException, SQLException{
+        String insert = "UPDATE `"+ Const.SETTINGS_TABLE + "` SET `" + Const.SETTINGS_TRIED+ "` = ?,`"+Const.SETTINGS_TIMEBLOCK+"` = ?,`"
+                +Const.SETTINGS_TIMEOUT+"` = ?" +" WHERE(`"+Const.SETTINGS_ID+"` = ?)";
+        System.out.println(insert);
+        PreparedStatement prSt = getDbConnection().prepareStatement(insert);
+        prSt.setString(1,Integer.toString(TriedPass));
+        prSt.setString(2, Long.toString(TimeBlock));
+        prSt.setString(3, Long.toString(TimeOut));
+        prSt.setString(4, "1");
+        prSt.executeUpdate();
+    }
+    public ResultSet getSettings(){
+        ResultSet resSet = null;
+        String select = "SELECT * from `"+Const.SETTINGS_TABLE+"`";
+        try {
+            PreparedStatement prSt = getDbConnection().prepareStatement(select);
+            resSet= prSt.executeQuery();
+        } catch (SQLException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
+        }
+        return resSet;
+    }
     public void addLog(Log log) throws ClassNotFoundException, SQLException{
         String insert = "INSERT into `"+ Const.LOG_TABLE + "`(`"
                 + Const.LOG_DATE + "`,`" + Const.LOG_UNAME + "`,`" + Const.LOG_LEVEL+ "`,`" +Const.LOG_DESC+"`)"
@@ -106,5 +135,16 @@ public class DBHandler extends Configs {
         prSt.setString(4, log.getDescription());
         prSt.executeUpdate();
 
+    }
+    public ResultSet getAllLogs(){
+        ResultSet resSet = null;
+        String select = "SELECT * from `"+Const.LOG_TABLE+"`";
+        try {
+            PreparedStatement prSt = getDbConnection().prepareStatement(select);
+            resSet= prSt.executeQuery();
+        } catch (SQLException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
+        }
+        return resSet;
     }
 }

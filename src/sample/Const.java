@@ -17,4 +17,10 @@ public class Const {
     public static final String LOG_UNAME = "user_name";
     public static final String LOG_LEVEL = "level";
     public static final String LOG_DESC = "description";
+    //----------------------------SETTINGS------------------------
+    public static final String SETTINGS_TABLE = "settings";
+    public static final String SETTINGS_ID = "idsettings";
+    public static final String SETTINGS_TRIED = "tried_pass";
+    public static final String SETTINGS_TIMEBLOCK = "time_block";
+    public static final String SETTINGS_TIMEOUT = "timeout";
 }

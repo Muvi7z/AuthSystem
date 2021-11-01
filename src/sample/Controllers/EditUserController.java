@@ -8,9 +8,11 @@ import javafx.scene.control.*;
 import javafx.scene.paint.Paint;
 import sample.DBHandler;
 import sample.Data.*;
+import sample.Settings;
 
 import java.security.SecureRandom;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -57,12 +59,14 @@ public class EditUserController extends Window implements Controller {
                 String pass = passEditField.getText();
                 String oldLogin = selectUser.getLogin();
                 selectUser.setLogin(login);
+
+
                 if(!pass.equals("") && pass.length()>5){
-                    SecureRandom random = new SecureRandom();
                     byte[] salt = new byte[16];
+                    SecureRandom random = new SecureRandom();
                     random.nextBytes(salt);
-                    selectUser.setPass(Password.hashingPass(pass,salt));
                     selectUser.setSalt(salt);
+                    selectUser.setPass(Password.hashingPass(pass,salt));
                 }
                 else if(!pass.equals("")) {
                     try {
@@ -78,6 +82,19 @@ public class EditUserController extends Window implements Controller {
                     selectUser.setIsBlock(isBlockCheckBox.isSelected());
                     try {
                         dbHandler.editUser(selectUser);
+                        if (isBlockCheckBox.isSelected()){
+                            Date date = new Date(new Date().getTime()+(Settings.TimeBlock*60000L));
+                            SimpleDateFormat formatForDateNow = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+                            dbHandler.setBlockUser(selectUser,true,formatForDateNow.format(date));
+                            Log log = new Log(new Date(),user.getLogin(), Log.Levels.INFO,"Администратор заблокировал аккаунт "+selectUser.getLogin()+
+                                    " до "+ date);
+                            dbHandler.addLog(log);
+                        }
+                        else {
+                            dbHandler.setBlockUser(selectUser,false,null);
+                            Log log = new Log(new Date(),user.getLogin(), Log.Levels.INFO,"Администратор разблокировал аккаунт "+selectUser.getLogin());
+                            dbHandler.addLog(log);
+                        }
                         errorLabel.setTextFill(Paint.valueOf("00ff73")); //#f51f1f
                         error("Учетная запись успешно изменена!");
                         System.out.println("Аккаунт "+selectUser.getLogin() + " изменен!");

@@ -17,7 +17,7 @@
                   <Font name="Arial" size="24.0" />
                </font>
             </Label>
-            <Button fx:id="saveBtn" layoutX="510.0" layoutY="536.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="210.0" stylesheets="@../../css/style.css" text="Сохранить">
+            <Button fx:id="saveBtn" layoutX="261.0" layoutY="520.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="244.0" stylesheets="@../../css/style.css" text="Сохранить">
                <font>
                   <Font name="Arial" size="12.0" />
                </font></Button>
@@ -36,7 +36,7 @@
                   <Font name="Arial" size="17.0" />
                </font>
             </Label>
-            <Label fx:id="errorLabel" contentDisplay="CENTER" layoutX="34.0" layoutY="259.0" maxWidth="710.0" prefHeight="17.0" prefWidth="710.0" text="Пользователь с таким логинов не найден" textAlignment="JUSTIFY" textFill="#f51f1f" visible="false" wrapText="true">
+            <Label fx:id="errorLabel" contentDisplay="CENTER" layoutX="28.0" layoutY="283.0" maxWidth="710.0" prefHeight="17.0" prefWidth="710.0" text="Пользователь с таким логинов не найден" textAlignment="JUSTIFY" textFill="#f51f1f" visible="false" wrapText="true">
                <font>
                   <Font name="Arial" size="15.0" />
                </font>

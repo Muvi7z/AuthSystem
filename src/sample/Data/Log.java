@@ -21,6 +21,13 @@ public class Log {
         this.level = level;
         this.description = description;
     }
+    public Log( String id,String description,  String userName, Levels level,Date date){
+        this.id = id;
+        this.date = date;
+        this.userName = userName;
+        this.level = level;
+        this.description = description;
+    }
     public String getId() {
         return id;
     }

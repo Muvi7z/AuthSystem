@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -46,7 +47,11 @@ public class UsersController implements Controller{
     private TableColumn<User, String> tcGroup;
     @FXML
     private TableColumn<User, String> tcBlock;
+    @FXML
+    private TableColumn<User, String> tcTimeBlock;
 
+    @FXML
+    private Label errorLabel;
     private double xOffset;
     private double yOffset;
 
@@ -58,13 +63,23 @@ public class UsersController implements Controller{
         tcLogin.setCellValueFactory(new PropertyValueFactory<>("Login"));
         tcPass.setCellValueFactory(new PropertyValueFactory<>("Pass"));
         tcGroup.setCellValueFactory(new PropertyValueFactory<>("Group"));
-        tcBlock.setCellValueFactory(new PropertyValueFactory<>("is_blocked"));
-       // tcBlock.setCellValueFactory(new PropertyValueFactory<>("time_block"));
+        tcBlock.setCellValueFactory(new PropertyValueFactory<>("isBlock"));
+        tcTimeBlock.setCellValueFactory(new PropertyValueFactory<>("dateBlock"));
         tb.setEditable(true);
         UpdateData();
-        editBtn.setOnAction(event -> launchNewWindow("items/userEdit.fxml",editBtn.getScene(),user, tb.getSelectionModel().getSelectedItem()));
+        editBtn.setOnAction(event -> {
+            if(tb.getSelectionModel().getSelectedItem()!=null) {
+                launchNewWindow("items/userEdit.fxml", editBtn.getScene(), user, tb.getSelectionModel().getSelectedItem());
+                errorLabel.setVisible(false);
+            }
+            else error("Вы не выбрали пользователя!");
+        });
         delBtn.setOnAction(event -> deleteUser(tb.getSelectionModel().getSelectedItem()));
         addBtn.setOnAction(event -> launchNewWindow("items/userAdd.fxml",addBtn.getScene(),user,null));
+    }
+    public void error(String text){
+        errorLabel.setVisible(true);
+        errorLabel.setText(text);
     }
     public void deleteUser(User user){
         DBHandler dbHandler = new DBHandler();

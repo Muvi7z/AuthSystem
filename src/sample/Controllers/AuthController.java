@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Set;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -52,6 +53,7 @@ public class AuthController extends Window {
     @FXML
     void initialize() {
         tried=0;
+        updateSettings();
         errorLabel.setVisible(false);
         triedLeftLabel.setVisible(false);
         signInBtn.setOnAction(event -> {
@@ -97,51 +99,52 @@ public class AuthController extends Window {
             user.setPass(result.getString(Const.USER_PASS));
             user.setSalt(result.getBytes(Const.USER_SALT));
             user.setId(result.getString(Const.USERS_ID));
-            if (Password.hashingPass(pass,user.getSalt()).equals(user.getPass())){
-                user.setIsBlock(result.getBoolean(Const.USER_BLOCK));
-                user.setDateBlock(result.getTimestamp(Const.USER_TIMEBLOCK));
-                user.setGroup(result.getString(Const.USER_GROUP));
-                if (user.getIsBlock() && (new Date()).after(user.getDateBlock())){
-                    user.setIsBlock(false);
-                    dbHandler.setBlockUser(user,false,null);
-                }
-                if(!user.getIsBlock()){
-                    Log log = new Log(new Date(),login, Log.Levels.INFO,"Успешный вход пользователя в систему");
+            user.setDateBlock(result.getTimestamp(Const.USER_TIMEBLOCK));
+            user.setIsBlock(result.getBoolean(Const.USER_BLOCK));
+            if (user.getIsBlock() && (new Date()).after(user.getDateBlock())) {
+                user.setIsBlock(false);
+                dbHandler.setBlockUser(user, false, null);
+            }
+            if(!user.getIsBlock()) {
+                if (Password.hashingPass(pass, user.getSalt()).equals(user.getPass())) {
+                    user.setGroup(result.getString(Const.USER_GROUP));
+                    Log log = new Log(new Date(), login, Log.Levels.INFO, "Успешный вход пользователя в систему");
                     dbHandler.addLog(log);
-                    error("Успешный вход",Paint.valueOf("f51f1f"));
+                    error("Успешный вход", Paint.valueOf("f51f1f"));
+                    tried=0;
                     triedLeftLabel.setVisible(false);
-                    launchNewWindow("sample.fxml",signInBtn.getScene(),null,null, user);
+                    launchNewWindow("sample.fxml", signInBtn.getScene(), null, null, user);
 
-                }
-                else {
+                } else {
                     try {
-                        error("Пользователь с таким логином заблокирован!",Paint.valueOf("f51f1f"));
-                        setTriedLeft("Заблокирован до: "+ user.getDateBlock());
+                        error("Введне неверный пароль!", Paint.valueOf("f51f1f"));
+                        tried++;
+                        setTriedLeft("Осталось попыток: " + (Settings.Tried_Pass - tried));
+                        if ((Settings.Tried_Pass - tried) <= 0) {
+                            Log log = new Log(new Date(), null, Log.Levels.INFO, "Несанкционированый доступ к пользователю " + login);
+                            dbHandler.addLog(log);
+
+                            Date date = new Date(new Date().getTime() + (Settings.TimeBlock * 60000L));
+                            SimpleDateFormat formatForDateNow = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+                            setTriedLeft("Аккаунт заблокирован: " + formatForDateNow.format(date));
+                            dbHandler.setBlockUser(user, true, formatForDateNow.format(date));
+                            log = new Log(new Date(), user.getLogin(), Log.Levels.INFO, "Аккаут был заблокирован до: " + formatForDateNow.format(date));
+                            dbHandler.addLog(log);
+                            tried = 0;
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
-            }else {
+            }
+            else{
                 try {
-                    error("Введне неверный пароль!",Paint.valueOf("f51f1f"));
-                    tried++;
-                    setTriedLeft("Осталось попыток: "+ (Settings.Tried_Pass-tried));
-                    if((Settings.Tried_Pass-tried)<=0){
-                        Log log = new Log(new Date(),null, Log.Levels.INFO,"Несанкционированый доступ к пользователю "+ login);
-                        dbHandler.addLog(log);
-
-                        Date date = new Date(new Date().getTime()+(Settings.TimeBlock*60000L));
-                        SimpleDateFormat formatForDateNow = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-                        setTriedLeft("Аккаунт заблокирован до: "+date);
-                        dbHandler.setBlockUser(user,true,formatForDateNow.format(date));
-                        tried=0;
-                        ///TODO блокировка
-                    }
+                    error("Пользователь с таким логином заблокирован!", Paint.valueOf("f51f1f"));
+                    setTriedLeft("Заблокирован до: " + user.getDateBlock());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-
         }
         else {
             try {
@@ -160,6 +163,20 @@ public class AuthController extends Window {
         triedLeftLabel.setVisible(true);
         triedLeftLabel.setText(text);
     }
+    public void updateSettings(){
+        DBHandler dbHandler = new DBHandler();
+        ResultSet result = dbHandler.getSettings();
+        try {
+            if (result.next()){
+                Settings.Tried_Pass = Integer.parseInt(result.getString(Const.SETTINGS_TRIED));
+                Settings.TimeBlock = Long.parseLong(result.getString(Const.SETTINGS_TIMEBLOCK));
+                Settings.TimeOut = Long.parseLong(result.getString(Const.SETTINGS_TIMEOUT));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
     public void launchNewWindow(String fxml, Scene scene, Double positionX, Double positionY, User user){
         scene.getWindow().hide();
         FXMLLoader loader = new FXMLLoader();
