@@ -3,6 +3,7 @@ package sample.Controllers;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 import sample.DBHandler;
 import sample.Data.Controller;
 import sample.Data.Log;
@@ -24,6 +25,17 @@ public class SecurityController implements Controller {
     public void setPrevScene(Scene scene) {
 
     }
+
+    @Override
+    public void setStage(Stage stage) {
+
+    }
+
+    @Override
+    public Stage getStage() {
+        return stage;
+    }
+
     @FXML
     private Button saveBtn;
 

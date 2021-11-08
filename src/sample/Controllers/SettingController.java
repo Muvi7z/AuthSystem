@@ -118,5 +118,15 @@ public class SettingController implements Controller {
         this.prevScene = scene;
     }
 
+    @Override
+    public void setStage(Stage stage) {
+
+    }
+
+    @Override
+    public Stage getStage() {
+        return stage;
+    }
+
 
 }

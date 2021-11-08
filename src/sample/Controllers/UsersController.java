@@ -19,6 +19,7 @@ import sample.DBHandler;
 import sample.Data.Controller;
 import sample.Data.Log;
 import sample.Data.User;
+import sample.Data.Window;
 
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -123,9 +124,9 @@ public class UsersController implements Controller{
            editUserController.setSelectUser(selectUser);
         }
         controller.setUser(user);
-
-
         controller.setPrevScene(scene);
+        controller.setStage(stage);
+        MainController.thread.setController(controller);
         stage.showAndWait();
         UpdateData();
     }
@@ -154,5 +155,15 @@ public class UsersController implements Controller{
     @Override
     public void setPrevScene(Scene scene) {
         prevScene=scene;
+    }
+
+    @Override
+    public void setStage(Stage stage) {
+
+    }
+
+    @Override
+    public Stage getStage() {
+        return stage;
     }
 }

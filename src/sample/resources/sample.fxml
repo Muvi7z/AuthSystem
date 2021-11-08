@@ -26,7 +26,14 @@
                         <Font name="Arial" size="24.0" />
                      </font>
                   </Label>
-                  <Button layoutX="28.0" layoutY="66.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="178.0" stylesheets="@../css/style.css" text="Архивировать" />
+                  <Button layoutX="24.0" layoutY="72.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="46.0" style="-fx-background-color: #141414;">
+                     <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../icons/archive.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
                   <TableView fx:id="tb" layoutX="4.0" layoutY="108.0" prefHeight="491.0" prefWidth="755.0" stylesheets="@../css/styling.css">
                     <columns>
                         <TableColumn fx:id="tcID" prefWidth="61.0" text="ID" />
@@ -36,6 +43,15 @@
                         <TableColumn fx:id="tcDate" minWidth="0.0" prefWidth="203.0" text="Дата" />
                     </columns>
                   </TableView>
+                  <Button layoutX="70.0" layoutY="72.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="46.0" style="-fx-background-color: #141414;">
+                     <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../icons/archive.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
                </children>
             </Pane>
          </center>

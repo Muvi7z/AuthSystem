@@ -2,6 +2,7 @@ package sample.Controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -17,6 +18,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -26,9 +28,13 @@ import sample.Data.Controller;
 import sample.Data.Log;
 import sample.Data.User;
 import sample.Data.Window;
+import sample.TimeThread;
 
 public class MainController extends Window implements Controller {
-    public Scene prevScene;
+    public static Scene prevScene;
+    public Stage stage;
+    public Scene Scene;
+    public static TimeThread thread;
     private double xOffset;
     private double yOffset;
     @Override
@@ -38,7 +44,25 @@ public class MainController extends Window implements Controller {
 
     @Override
     public void setPrevScene(Scene scene) {
-        this.prevScene = scene;
+        prevScene = scene;
+    }
+
+    @Override
+    public void setStage(Stage stage) {
+        this.stage=stage;
+        stage.getScene().addEventFilter(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if(thread!=null)
+                    thread.setNoActiveDelay(0);
+
+            }
+        });
+    }
+
+    @Override
+    public Stage getStage() {
+        return stage;
     }
 
 
@@ -97,15 +121,19 @@ public class MainController extends Window implements Controller {
         tcDate.setCellValueFactory(new PropertyValueFactory<>("date"));
         tb.setEditable(true);
         UpdateData();
-
-        exitBtn.setOnAction(event -> close(exitBtn.getScene()));
+        exitBtn.setOnAction(event -> {
+            thread.interrupt();
+            close(exitBtn.getScene());
+        });
         minimizeBtn.setOnAction(event -> minimize(minimizeBtn.getScene()));
         viewNode = mainPane.getCenter();
         menuNode = mainPane.getLeft();
         securityBtn.setOnAction(event -> changeItem("security.fxml"));
         usersBtn.setOnAction(event -> changeItem("users.fxml"));
         settingsBtn.setOnAction(event -> changeItem("settings.fxml"));
-
+        thread=new TimeThread();
+        thread.setMainController(this);
+        thread.start();
         viewBtn.setOnAction(event -> {
             UpdateData();
             mainPane.setCenter(viewNode);
@@ -113,29 +141,33 @@ public class MainController extends Window implements Controller {
             mainPane.setLeft(menuNode);
         });
         logoutBtn.setOnAction(event -> {
-            logoutBtn.getScene().getWindow().hide();
-            Stage stage = new Stage();
-            stage.getIcons().add(new Image("https://img.icons8.com/doodle/452/iris-scan.png"));
-            prevScene.setOnMousePressed(event1 -> {
-                xOffset = stage.getX() - event1.getScreenX();
-                yOffset = stage.getY() - event1.getScreenY();
-            });
-            prevScene.setOnMouseDragged(event12 -> {
-                stage.setX(event12.getScreenX() + xOffset);
-                stage.setY(event12.getScreenY() + yOffset);
-            });
-            DBHandler dbHandler = new DBHandler();
-            Log log = new Log(new Date(),this.user.getLogin(), Log.Levels.INFO,"Пользователь вышел из аккаунта");
-            try {
-                dbHandler.addLog(log);
-            } catch (ClassNotFoundException | SQLException e) {
-                e.printStackTrace();
-            }
-            stage.setScene(prevScene);
-            stage.initStyle(StageStyle.UNDECORATED);
-            stage.showAndWait();
-
+            logOut();
         });
+    }
+    public void logOut(){
+        stage.getScene().getWindow().hide();
+        Stage stage = new Stage();
+
+        stage.getIcons().add(new Image("https://img.icons8.com/doodle/452/iris-scan.png"));
+        prevScene.setOnMousePressed(event1 -> {
+            xOffset = stage.getX() - event1.getScreenX();
+            yOffset = stage.getY() - event1.getScreenY();
+        });
+        prevScene.setOnMouseDragged(event12 -> {
+            stage.setX(event12.getScreenX() + xOffset);
+            stage.setY(event12.getScreenY() + yOffset);
+        });
+        DBHandler dbHandler = new DBHandler();
+        Log log = new Log(new Date(),this.user.getLogin(), Log.Levels.INFO,"Пользователь вышел из аккаунта");
+        try {
+            dbHandler.addLog(log);
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+        thread.interrupt();
+        stage.setScene(prevScene);
+        stage.initStyle(StageStyle.UNDECORATED);
+        stage.show();
     }
     public void changeItem(String fxml){
         try {

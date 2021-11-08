@@ -110,7 +110,7 @@ public class AuthController extends Window {
                     user.setGroup(result.getString(Const.USER_GROUP));
                     Log log = new Log(new Date(), login, Log.Levels.INFO, "Успешный вход пользователя в систему");
                     dbHandler.addLog(log);
-                    error("Успешный вход", Paint.valueOf("f51f1f"));
+                    error("Успешный вход", Paint.valueOf("00ff73"));
                     tried=0;
                     triedLeftLabel.setVisible(false);
                     launchNewWindow("sample.fxml", signInBtn.getScene(), null, null, user);
@@ -208,6 +208,7 @@ public class AuthController extends Window {
         Controller controller = loader.getController();
         controller.setUser(user);
         controller.setPrevScene(scene);
+        controller.setStage(stage);
         stage.show();
     }
 

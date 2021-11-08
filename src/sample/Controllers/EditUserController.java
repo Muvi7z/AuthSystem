@@ -2,10 +2,13 @@ package sample.Controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Paint;
+import javafx.stage.Stage;
 import sample.DBHandler;
 import sample.Data.*;
 import sample.Settings;
@@ -20,6 +23,7 @@ public class EditUserController extends Window implements Controller {
     private User user=null;
     private User selectUser=null;
     public Scene prevScene;
+    public Stage stage;
     @FXML
     private TextField loginEditField1;
 
@@ -141,6 +145,23 @@ public class EditUserController extends Window implements Controller {
     @Override
     public void setPrevScene(Scene scene) {
         prevScene=scene;
+    }
+
+    @Override
+    public void setStage(Stage stage) {
+        this.stage=stage;
+        stage.getScene().addEventFilter(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if(MainController.thread!=null)
+                    MainController.thread.setNoActiveDelay(0);
+            }
+        });
+    }
+
+    @Override
+    public Stage getStage() {
+        return stage;
     }
 
 }
