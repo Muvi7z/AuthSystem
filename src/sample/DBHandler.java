@@ -147,4 +147,10 @@ public class DBHandler extends Configs {
         }
         return resSet;
     }
+    public void deleteAllLogs() throws ClassNotFoundException, SQLException{
+        String delete = "DELETE from "+Const.LOG_TABLE;
+        System.out.println(delete);
+        PreparedStatement prSt = getDbConnection().prepareStatement(delete);
+        prSt.executeUpdate();
+    }
 }

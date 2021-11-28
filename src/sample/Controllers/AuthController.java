@@ -24,8 +24,7 @@ import sample.Data.*;
 
 public class AuthController extends Window {
     int tried = 0;
-    private double xOffset;
-    private double yOffset;
+
     @FXML
     private Label triedLeftLabel;
 
@@ -87,7 +86,7 @@ public class AuthController extends Window {
         });
         exitBtn.setOnAction(event -> close(exitBtn.getScene()));
         minimizeBtn.setOnAction(event -> close(minimizeBtn.getScene()));
-        signUpBtn.setOnAction(event -> launchNewWindow("regist.fxml", signUpBtn.getScene(),signUpBtn.getScene().getWindow().getX(),signUpBtn.getScene().getWindow().getY(),null));
+        signUpBtn.setOnAction(event -> launchNewWindow("regist.fxml", signUpBtn.getScene(),signUpBtn.getScene().getWindow().getX(),signUpBtn.getScene().getWindow().getY(),null,signUpBtn.getScene()));
     }
 
     private void loginUser(String login, String pass) throws SQLException, ClassNotFoundException {
@@ -113,7 +112,7 @@ public class AuthController extends Window {
                     error("Успешный вход", Paint.valueOf("00ff73"));
                     tried=0;
                     triedLeftLabel.setVisible(false);
-                    launchNewWindow("sample.fxml", signInBtn.getScene(), null, null, user);
+                    launchNewWindow("sample.fxml", signInBtn.getScene(), null, null, user,signInBtn.getScene());
 
                 } else {
                     try {
@@ -177,39 +176,6 @@ public class AuthController extends Window {
         }
     }
 
-    public void launchNewWindow(String fxml, Scene scene, Double positionX, Double positionY, User user){
-        scene.getWindow().hide();
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/sample/resources/"+fxml));
-        try {
-            loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Parent root = loader.getRoot();
-        Stage stage = new Stage();
-        stage.getIcons().add(new Image("https://img.icons8.com/doodle/452/iris-scan.png"));
-        Scene newScene = new Scene(root);
-        newScene.setOnMousePressed(event -> {
-            xOffset = stage.getX() - event.getScreenX();
-            yOffset = stage.getY() - event.getScreenY();
-        });
-        newScene.setOnMouseDragged(event -> {
-            stage.setX(event.getScreenX() + xOffset);
-            stage.setY(event.getScreenY() + yOffset);
-        });
-        if(positionX != null){
-            stage.setY(positionY);
-            stage.setX(positionX);
-        }
 
-        stage.setScene(newScene);
-        stage.initStyle(StageStyle.UNDECORATED);
-        Controller controller = loader.getController();
-        controller.setUser(user);
-        controller.setPrevScene(scene);
-        controller.setStage(stage);
-        stage.show();
-    }
 
 }

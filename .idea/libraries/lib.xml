@@ -1,5 +1,5 @@
 <component name="libraryTable">
-  <library name="openjfx-16_windows-x64_bin-sdk">
+  <library name="lib">
     <CLASSES>
       <root url="file://$PATH_TO_FIX$" />
     </CLASSES>

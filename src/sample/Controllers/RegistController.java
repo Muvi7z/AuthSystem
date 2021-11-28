@@ -79,7 +79,7 @@ public class RegistController extends Window implements Controller {
         if(!login.equals("")) {
             if (login.length() >= minLog && login.length() <= maxLog) {
                 errorLabel.setVisible(false);
-                if(!pass.equals("") && pass.length()>5){
+                if(pass.length() > 5){
                     SecureRandom random = new SecureRandom();
 
                     byte[] salt = new byte[16];
@@ -91,6 +91,9 @@ public class RegistController extends Window implements Controller {
                         error("Учетная запись успешно создана!");
                         Log log = new Log(new Date(),"", Log.Levels.INFO,"Создан аккаунт "+login);
                         dbHandler.addLog(log);
+                        log = new Log(new Date(), login, Log.Levels.INFO, "Успешный вход пользователя в систему");
+                        dbHandler.addLog(log);
+                        launchNewWindow("sample.fxml", signUpCreateBtn.getScene(), null, null, user,prevScene);
                         System.out.println("Аккаунт "+login + " создан!");
                     } catch (SQLException e) {
                         errorLabel.setTextFill(Paint.valueOf("f51f1f"));

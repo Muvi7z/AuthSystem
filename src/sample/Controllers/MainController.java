@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,6 +15,7 @@ import java.util.Date;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -37,6 +39,9 @@ public class MainController extends Window implements Controller {
     public static TimeThread thread;
     private double xOffset;
     private double yOffset;
+
+
+
     @Override
     public void setUser(User user) {
         this.user=user;
@@ -50,13 +55,10 @@ public class MainController extends Window implements Controller {
     @Override
     public void setStage(Stage stage) {
         this.stage=stage;
-        stage.getScene().addEventFilter(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                if(thread!=null)
-                    thread.setNoActiveDelay(0);
+        stage.getScene().addEventFilter(MouseEvent.MOUSE_MOVED, mouseEvent -> {
+            if(thread!=null)
+                thread.setNoActiveDelay(0);
 
-            }
         });
     }
 
@@ -65,6 +67,10 @@ public class MainController extends Window implements Controller {
         return stage;
     }
 
+    @FXML
+    private Button clearBtn;
+    @FXML
+    private Button archiveBtn;
 
     @FXML
     private Button minimizeBtn;
@@ -107,6 +113,9 @@ public class MainController extends Window implements Controller {
     @FXML
     private TableColumn<Log, String> tcDate;
 
+    @FXML
+    private Label alertLabel;
+
     private ObservableList<Log> logsList;
     private Node viewNode = null;
     private Node menuNode = null;
@@ -140,9 +149,54 @@ public class MainController extends Window implements Controller {
             mainPane.setLeft(null);
             mainPane.setLeft(menuNode);
         });
-        logoutBtn.setOnAction(event -> {
-            logOut();
+        logoutBtn.setOnAction(event -> logOut());
+        clearBtn.setOnAction(event ->{
+            DBHandler dbHandler = new DBHandler();
+            try {
+                dbHandler.deleteAllLogs();
+                UpdateData();
+                alert("Логи были очищены");
+                Log log = new Log(new Date(),this.user.getLogin(), Log.Levels.INFO,"Администратор очистил журнал");
+                try {
+                    dbHandler.addLog(log);
+                } catch (ClassNotFoundException | SQLException e) {
+                    e.printStackTrace();
+                }
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         });
+        archiveBtn.setOnAction(actionEvent -> writeLogToFile());
+    }
+    public void writeLogToFile(){
+        try(FileWriter writer = new FileWriter("logs.txt", false))
+        {
+            DBHandler dbHandler = new DBHandler();
+            ResultSet result = dbHandler.getAllLogs();
+            try {
+                while (result.next()){
+                    String log = "["+result.getTimestamp(Const.LOG_DATE)+"] "+"Login: "+result.getString(Const.LOG_UNAME) +" "+result.getString(Const.LOG_LEVEL)+": "+result.getString(Const.LOG_DESC)+"\n";
+                    writer.write(log);
+                    writer.flush();
+                }
+                alert("Логи успешно архивированы!");
+                Log log = new Log(new Date(),this.user.getLogin(), Log.Levels.INFO,"Администратор архивировал журнал");
+                try {
+                    dbHandler.addLog(log);
+                } catch (ClassNotFoundException | SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            catch (SQLException e ){
+                System.out.println(e.getMessage());
+            }
+        }
+        catch(IOException ex){
+
+            System.out.println(ex.getMessage());
+        }
     }
     public void logOut(){
         stage.getScene().getWindow().hide();
@@ -184,7 +238,10 @@ public class MainController extends Window implements Controller {
             e.printStackTrace();
         }
     }
-
+    public void alert(String text){
+        alertLabel.setVisible(true);
+        alertLabel.setText(text);
+    }
     public void UpdateData() {
         DBHandler dbHandler = new DBHandler();
         ResultSet result = dbHandler.getAllLogs();
