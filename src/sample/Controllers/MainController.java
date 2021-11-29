@@ -45,6 +45,11 @@ public class MainController extends Window implements Controller {
     @Override
     public void setUser(User user) {
         this.user=user;
+        if(user.getGroup().equals(User.UserType.Admin.name())){
+            securityBtn.setOnAction(event -> changeItem("security.fxml"));
+            usersBtn.setOnAction(event -> changeItem("users.fxml"));
+
+        }
     }
 
     @Override
@@ -134,22 +139,11 @@ public class MainController extends Window implements Controller {
             thread.interrupt();
             close(exitBtn.getScene());
         });
+        settingsBtn.setOnAction(event -> changeItem("settings.fxml"));
         minimizeBtn.setOnAction(event -> minimize(minimizeBtn.getScene()));
         viewNode = mainPane.getCenter();
         menuNode = mainPane.getLeft();
-        securityBtn.setOnAction(event -> changeItem("security.fxml"));
-        usersBtn.setOnAction(event -> changeItem("users.fxml"));
-        settingsBtn.setOnAction(event -> changeItem("settings.fxml"));
-        thread=new TimeThread();
-        thread.setMainController(this);
-        thread.start();
-        viewBtn.setOnAction(event -> {
-            UpdateData();
-            mainPane.setCenter(viewNode);
-            mainPane.setLeft(null);
-            mainPane.setLeft(menuNode);
-        });
-        logoutBtn.setOnAction(event -> logOut());
+
         clearBtn.setOnAction(event ->{
             DBHandler dbHandler = new DBHandler();
             try {
@@ -169,6 +163,17 @@ public class MainController extends Window implements Controller {
             }
         });
         archiveBtn.setOnAction(actionEvent -> writeLogToFile());
+        thread=new TimeThread();
+        thread.setMainController(this);
+        thread.start();
+        viewBtn.setOnAction(event -> {
+            UpdateData();
+            mainPane.setCenter(viewNode);
+            mainPane.setLeft(null);
+            mainPane.setLeft(menuNode);
+        });
+        logoutBtn.setOnAction(event -> logOut());
+
     }
     public void writeLogToFile(){
         try(FileWriter writer = new FileWriter("logs.txt", false))
